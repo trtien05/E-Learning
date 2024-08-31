@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
+import { manrope } from "@/utils";
+import Sidebar from "@/app/components/layout/Sidebar";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,8 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" >
+      <body className={`${manrope.variable}`}>
+        <div className="wrapper grid grid-cols-[300px,minmax(0,1fr)] h-screen">
+          <Sidebar />
+          <main>{children}</main>
+        </div>
+      </body>
     </html>
   );
 }
