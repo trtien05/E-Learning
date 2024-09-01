@@ -1,4 +1,4 @@
-import { IconPlay, IconExplore } from "@/app/components/icons"
+import { IconPlay, IconExplore } from '@/components/icons/index'
 
 export const menuItems: {
   url: string,

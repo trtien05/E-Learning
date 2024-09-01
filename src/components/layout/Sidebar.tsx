@@ -1,6 +1,7 @@
-import ActiveLink from '@/app/components/common/ActiveLink'
-import { menuItems } from '@/app/constants'
-import { TMenuItems } from '@/app/types'
+
+import ActiveLink from '@/components/common/ActiveLink'
+import { menuItems } from '@/constants'
+import { TMenuItems } from '@/types'
 
 import React from 'react'
 

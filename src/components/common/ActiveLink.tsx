@@ -1,5 +1,5 @@
 'use client'
-import { TActiveLinkProps } from '@/app/types'
+import { TActiveLinkProps } from '@/types/index'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 import React from 'react'
