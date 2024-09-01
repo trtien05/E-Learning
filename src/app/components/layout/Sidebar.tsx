@@ -1,12 +1,15 @@
-import IconPlay from '@/app/components/icons/IconPlay'
+import ActiveLink from '@/app/components/common/ActiveLink'
 import { menuItems } from '@/app/constants'
+import { TMenuItems } from '@/app/types'
+
 import React from 'react'
 
 const Sidebar = () => {
   return (
     <div className='p-5 border-r border-r-gray-200'>
       <a href="/" className='font-bold text-3xl inline-block mb-5'>
-        LearnX
+        <span className='text-primary'>E</span>
+        duVerse
       </a>
       <ul className='flex flex-col gap-2'>
         {menuItems.map((item, index) => (
@@ -18,13 +21,14 @@ const Sidebar = () => {
   )
 }
 
-function MenuItem({ url = "/", title = "", icon }: { url: string, title: string, icon?: React.ReactNode }) {
+function MenuItem({ url = "/", title = "", icon }: TMenuItems) {
+
   return (
     <li>
-      <a href={url} className='p-3 rounded-md flex items-center gap-3 hover:text-primary hover:bg-primary hover:bg-opacity-10'>
+      <ActiveLink url={url}>
         {icon}
         {title}
-      </a>
+      </ActiveLink>
     </li>
   )
 }

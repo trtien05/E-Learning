@@ -1,5 +1,4 @@
-import IconExplore from "@/app/components/icons/IconExplore"
-import IconPlay from "@/app/components/icons/IconPlay"
+import { IconPlay, IconExplore } from "@/app/components/icons"
 
 export const menuItems: {
   url: string,
@@ -12,7 +11,7 @@ export const menuItems: {
       icon: <IconPlay className="size-5" />
     },
     {
-      url: '/',
+      url: '/explore',
       title: 'Khám phá',
       icon: <IconExplore className="size-5" />
     }
