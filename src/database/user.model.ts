@@ -13,6 +13,7 @@ export interface IUser extends Document {
   role: EUserRole;
   createdAt: Date;
 }
+
 const userSchema = new Schema<IUser>({
   clerkId: {
     type: String,
@@ -22,9 +23,13 @@ const userSchema = new Schema<IUser>({
   },
   username: {
     type: String,
+    required: true,
+    unique: true,
   },
   email_address: {
     type: String,
+    required: true,
+    unique: true,
   },
   avatar: {
     type: String,
@@ -51,6 +56,7 @@ const userSchema = new Schema<IUser>({
     default: EUserStatus.ACTIVE,
   },
 });
+
 //sử dụng model User nếu có còn không thì tạo User
 const User = models.User || model<IUser>("User", userSchema);
 export default User;
