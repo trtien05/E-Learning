@@ -1,5 +1,6 @@
 
 import { ActiveLink } from '@/components/common'
+import { ModeToggle } from '@/components/ModeToggle'
 import { menuItems } from '@/constants'
 import { TMenuItems } from '@/types'
 import { UserButton } from '@clerk/nextjs'
@@ -8,7 +9,7 @@ import React from 'react'
 
 const Sidebar = () => {
   return (
-    <div className='p-5 border-r border-r-gray-200 bg-white flex flex-col'>
+    <div className='p-5 border-r border-r-gray-200 bg-white flex flex-col dark:border-opacity-10 dark:bg-grayDarker'>
       <a href="/" className='font-bold text-3xl inline-block mb-5'>
         <span className='text-primary'>E</span>
         duVerse
@@ -18,8 +19,9 @@ const Sidebar = () => {
           <MenuItem key={index} url={item.url} title={item.title} icon={item.icon} />
         ))}
       </ul>
-      <div className='flex mt-auto justify-end items-center'>
+      <div className='flex mt-auto justify-end items-center gap-5'>
         <UserButton />
+        <ModeToggle />
       </div>
     </div>
 
