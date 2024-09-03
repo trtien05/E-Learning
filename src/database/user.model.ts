@@ -5,13 +5,13 @@ export interface IUser extends Document {
   clerkId: string;
   name: string;
   username: string;
-  email_address: string;
+  email: string;
   avatar: string;
   //course là khóa ngoại liên kết với model khác
   courses: Schema.Types.ObjectId[];
   status: EUserStatus;
   role: EUserRole;
-  createdAt: Date;
+  created_at: Date;
 }
 
 const userSchema = new Schema<IUser>({
@@ -26,7 +26,7 @@ const userSchema = new Schema<IUser>({
     required: true,
     unique: true,
   },
-  email_address: {
+  email: {
     type: String,
     required: true,
     unique: true,
@@ -40,7 +40,7 @@ const userSchema = new Schema<IUser>({
       ref: "Course", //Liên kết tới model khác
     },
   ],
-  createdAt: {
+  created_at: {
     type: Date,
     default: Date.now,
   },
