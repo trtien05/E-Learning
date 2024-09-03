@@ -9,7 +9,7 @@ const page = async () => {
     clerkId: 'fds',
     name: 'tien',
     username: 'trantien',
-    email_address: 'trantien100700@gmail.com',
+    email: 'trantien100700@gmail.com',
     avatar: 'bcd'
   })
   return (
