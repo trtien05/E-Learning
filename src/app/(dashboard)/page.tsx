@@ -5,13 +5,6 @@ import createUser from '@/lib/actions/user.actions'
 import React from 'react'
 
 const page = async () => {
-  const vac = await createUser({
-    clerkId: 'fds',
-    name: 'tien',
-    username: 'trantien',
-    email: 'trantien100700@gmail.com',
-    avatar: 'bcd'
-  })
   return (
     <>
       <Heading>Khám phá</Heading>
