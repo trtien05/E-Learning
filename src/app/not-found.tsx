@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-const NotFound = () => {
+const PageNotFound = () => {
   return (
     <div className='flex flex-col items-center justify-center h-screen'>
       <h1 className='font-bold text-7xl'>404</h1>
@@ -26,4 +26,4 @@ const NotFound = () => {
   )
 }
 
-export default NotFound
+export default PageNotFound

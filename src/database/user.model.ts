@@ -7,7 +7,6 @@ export interface IUser extends Document {
   username: string;
   email: string;
   avatar: string;
-  //course là khóa ngoại liên kết với model khác
   courses: Schema.Types.ObjectId[];
   status: EUserStatus;
   role: EUserRole;
