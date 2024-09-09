@@ -3,6 +3,8 @@ import "./globals.css";
 import { manrope } from "@/utils";
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from "@/components/theme-provider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: "EduVerse",
@@ -25,6 +27,11 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <ToastContainer
+              autoClose={2000}
+              bodyClassName="text-sm font-medium"
+              position="top-right"
+            />
           </ThemeProvider>
         </body>
       </html>

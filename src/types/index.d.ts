@@ -1,19 +1,23 @@
-type TMenuItems = {
+export type TMenuItems = {
     url: string,
     title: string,
     icon?: React.ReactNode
 }
 
-type TActiveLinkProps = {
+export type TActiveLinkProps = {
     url: string,
     children: React.ReactNode
 }
 
-type TCreateUserParams = {
+export type TCreateUserParams = {
     clerkId: string;
     name?: string;
     username: string;
     email: string;
     avatar?: string;
 }
-export { TMenuItems, TActiveLinkProps, TCreateUserParams }
+
+export type TCreateCourseParams = {
+    title: string;
+    slug: string;
+}

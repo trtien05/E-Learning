@@ -1,56 +1,60 @@
 import { ECourseLevel, ECourseStatus } from "@/types/enum";
-import { Document, model, models, Schema } from "mongoose";
+import { Document, Schema, model, models } from "mongoose";
 
 export interface ICourse extends Document {
   _id: string;
-  title: string
+  title: string;
   image: string;
   intro_url: string;
   desc: string;
   price: number;
   sale_price: number;
   slug: string;
-  author: Schema.Types.ObjectId;
   status: ECourseStatus;
-  views: number;
   level: ECourseLevel;
-  rating: number[];
-  created_at: Date;
-  infor: {
+  views: number;
+  rating: Schema.Types.ObjectId[];
+  info: {
     requirements: string[];
     benefits: string[];
     qa: {
       question: string;
       answer: string;
-    }[]
+    }[];
   };
   lectures: Schema.Types.ObjectId[];
-  _destroy: boolean
+  created_at: Date;
+  author: Schema.Types.ObjectId;
+  _destroy: boolean;
 }
-
 const courseSchema = new Schema<ICourse>({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   slug: {
     type: String,
-    required: true
+    required: true,
   },
   image: {
     type: String,
+    default: "",
   },
   intro_url: {
     type: String,
+    default: "",
   },
   desc: {
     type: String,
+    default: "",
   },
   price: {
     type: Number,
+    default: 0,
   },
   sale_price: {
     type: Number,
+    default: 0,
   },
   status: {
     type: String,
@@ -72,39 +76,39 @@ const courseSchema = new Schema<ICourse>({
     },
   ],
   rating: {
-    type: [Number],
-    default: [5],
+    type: [Schema.Types.ObjectId],
+    ref: "Rating",
   },
   views: {
     type: Number,
     default: 0,
   },
-  level: {
-    type: String,
-    enum: Object.values(ECourseLevel),
-    default: ECourseLevel.BEGINNER,
-  },
-  infor: {
+  info: {
     requirements: {
-      type: [String]
+      type: [String],
     },
     benefits: {
-      type: [String]
+      type: [String],
     },
     qa: [
       {
         question: {
-          type: String
+          type: String,
         },
         answer: {
           type: String,
         },
-      }
-    ]
+      },
+    ],
   },
   _destroy: {
     type: Boolean,
     default: false,
+  },
+  level: {
+    type: String,
+    enum: Object.values(ECourseLevel),
+    default: ECourseLevel.BEGINNER,
   },
 });
 

@@ -1,5 +1,4 @@
 "use client"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -15,6 +14,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
+import { createCourse } from "@/lib/actions/course.actions";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   title: z.string().min(10, "Tên khóa học phải có ít nhất 10 ký tự"),
@@ -22,6 +24,7 @@ const formSchema = z.object({
 })
 
 export function CourseAddNew() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -31,7 +34,7 @@ export function CourseAddNew() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
       const data = {
@@ -41,7 +44,13 @@ export function CourseAddNew() {
           locale: "vi",
         })
       }
-      console.log(data)
+      const res = await createCourse(data);
+      if (res?.status) {
+        toast.success("Tạo khóa học thành công")
+      }
+      if (res?.data) {
+        router.push(`/manage/course/update?slug=${res.data.slug}`)
+      }
     } catch (error) {
 
     } finally {
