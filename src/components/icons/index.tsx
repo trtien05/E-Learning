@@ -8,5 +8,7 @@ export { default as IconComment } from './IconComment'
 export { default as IconEye } from './IconEye'
 export { default as IconStar } from './IconStar'
 export { default as IconClock } from './IconClock'
+export { default as IconAdd } from './IconAdd'
+
 
 
