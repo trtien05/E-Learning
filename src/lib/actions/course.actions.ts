@@ -1,7 +1,8 @@
 "use server";
-import Course from "@/database/course.model";
+import Course, { ICourse } from "@/database/course.model";
 import { connectToDatabase } from "@/lib/mongoose";
-import { TCreateCourseParams } from "@/types";
+import { TCreateCourseParams, TUpdateCoureParams } from "@/types";
+import { revalidatePath } from "next/cache";
 
 //Fetching
 export async function getCourseBySlug({ slug }: { slug: string }) {
@@ -9,6 +10,16 @@ export async function getCourseBySlug({ slug }: { slug: string }) {
     connectToDatabase();
     const findCourse = await Course.findOne({ slug });
     return findCourse;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getAllCourses(): Promise<ICourse[] | undefined> {
+  try {
+    connectToDatabase();
+    const courses = await Course.find();
+    return courses;
   } catch (error) {
     console.log(error)
   }
@@ -26,5 +37,22 @@ export async function createCourse(params: TCreateCourseParams) {
   } catch (error) {
     console.log(error)
   }
+}
 
+export async function updateCourse(params: TUpdateCoureParams) {
+  try {
+    connectToDatabase();
+    const findCourse = await Course.findOne({ slug: params.slug });
+    if (!findCourse) return null;
+    await Course.findOneAndUpdate({ slug: params.slug }, params.updateData, {
+      new: true
+    })
+    revalidatePath('/')
+    return {
+      success: true,
+      message: 'Cập nhật khóa học thành công'
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }

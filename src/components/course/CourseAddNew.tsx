@@ -55,6 +55,7 @@ export function CourseAddNew() {
 
     } finally {
       setIsSubmitting(false)
+      form.reset();
     }
   }
 

@@ -13,7 +13,7 @@ export interface ICourse extends Document {
   status: ECourseStatus;
   level: ECourseLevel;
   views: number;
-  rating: Schema.Types.ObjectId[];
+  rating: number[];
   info: {
     requirements: string[];
     benefits: string[];
@@ -76,8 +76,8 @@ const courseSchema = new Schema<ICourse>({
     },
   ],
   rating: {
-    type: [Schema.Types.ObjectId],
-    ref: "Rating",
+    type: [Number],
+    default: [5],
   },
   views: {
     type: Number,
