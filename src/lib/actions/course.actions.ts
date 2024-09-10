@@ -5,7 +5,7 @@ import { TCreateCourseParams, TUpdateCoureParams } from "@/types";
 import { revalidatePath } from "next/cache";
 
 //Fetching
-export async function getCourseBySlug({ slug }: { slug: string }) {
+export async function getCourseBySlug({ slug }: { slug: string }): Promise<ICourse | undefined> {
   try {
     connectToDatabase();
     const findCourse = await Course.findOne({ slug });

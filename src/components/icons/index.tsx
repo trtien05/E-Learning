@@ -1,6 +1,6 @@
 
 export { default as IconPlay } from './IconPlay'
-export { default as IconExplore } from './IconExplore'
+export { default as IconStudy } from './IconStudy'
 export { default as IconCourse } from './IconCourse'
 export { default as IconOrder } from './IconOrder'
 export { default as IconUser } from './IconUser'

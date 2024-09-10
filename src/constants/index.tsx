@@ -1,7 +1,7 @@
 
 import {
   IconPlay,
-  IconExplore,
+  IconStudy,
   IconCourse,
   IconOrder,
   IconUser,
@@ -21,7 +21,7 @@ export const menuItems: {
     {
       url: '/study',
       title: 'Khư vực học tập',
-      icon: <IconExplore className="size-5" />
+      icon: <IconStudy className="size-5" />
     },
     {
       url: '/manage/course',
