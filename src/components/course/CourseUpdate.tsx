@@ -29,6 +29,9 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify';
 import { IconAdd } from '@/components/icons';
 import { useImmer } from "use-immer";
+import { courseLevel, courseStatus } from '@/constants';
+import { UploadButton } from '@/utils/uploadthing';
+import Image from 'next/image';
 
 const formSchema = z.object({
   title: z.string().min(10, "Tên khóa học phải có ít nhất 10 ký tự"),
@@ -39,20 +42,20 @@ const formSchema = z.object({
   desc: z.string().optional(),
   image: z.string().optional(),
   views: z.number().int().optional(),
-  // status: z
-  //   .enum([
-  //     ECourseStatus.APPROVED,
-  //     ECourseStatus.PENDING,
-  //     ECourseStatus.REJECTED,
-  //   ])
-  //   .optional(),
-  // level: z
-  //   .enum([
-  //     ECourseLevel.BEGINNER,
-  //     ECourseLevel.INTERMEDIATE,
-  //     ECourseLevel.ADVANCED,
-  //   ])
-  //   .optional(),
+  status: z
+    .enum([
+      ECourseStatus.APPROVED,
+      ECourseStatus.PENDING,
+      ECourseStatus.REJECTED,
+    ])
+    .optional(),
+  level: z
+    .enum([
+      ECourseLevel.BEGINNER,
+      ECourseLevel.INTERMEDIATE,
+      ECourseLevel.ADVANCED,
+    ])
+    .optional(),
   info: z.object({
     requirements: z.array(z.string()).optional(),
     benefits: z.array(z.string()).optional(),
@@ -79,8 +82,8 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
       intro_url: data.intro_url,
       desc: data.desc,
       image: data.image,
-      // status: data.status,
-      // level: data.level,
+      status: data.status,
+      level: data.level,
       views: data.views,
       info: {
         requirements: data.info.requirements,
@@ -103,6 +106,9 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
           intro_url: values.intro_url,
           desc: values.desc,
           views: values.views,
+          status: values.status,
+          level: values.level,
+          image: values.image,
           info: {
             requirements: courseInfo.requirements,
             benefits: courseInfo.benefits,
@@ -122,6 +128,9 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
       setIsSubmitting(false)
     }
   }
+  //Theo dõi hình ảnh
+  const imageWatch = form.watch("image");
+  console.log('imageWatch', imageWatch)
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
@@ -212,11 +221,30 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
               <FormItem>
                 <FormLabel>Ảnh đại diện</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="Nhập mô tả..."
-                    {...field}
-                    className="h-[250px]"
-                  />
+                  <>
+                    <div className="flex items-center justify-center h-[250px] bg-white rounded-md border border-gray-200 relative">
+                      {imageWatch ? (
+                        <Image
+                          src={imageWatch}
+                          alt='image_course'
+                          fill
+                          className='w-full h-full object-cover'
+                        />
+                      ) : (
+                        <UploadButton
+                          endpoint="imageUploader"
+                          onClientUploadComplete={(res) => {
+                            // Do something with the response
+                            form.setValue("image", res[0].url);
+                          }}
+                          onUploadError={(error: Error) => {
+                            // Do something with the error.
+                            console.log(`ERROR! ${error.message}`);
+                          }}
+                        />
+                      )}
+                    </div>
+                  </>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -253,7 +281,7 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
               </FormItem>
             )}
           />
-          {/* <FormField
+          <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
@@ -267,7 +295,14 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Trạng thái" />
                     </SelectTrigger>
-
+                    <SelectContent>
+                      {courseStatus.map((status) =>
+                      (
+                        <SelectItem key={status.value} value={status.value}>
+                          {status.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </FormControl>
                 <FormMessage />
@@ -288,13 +323,20 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Trình độ" />
                     </SelectTrigger>
-
+                    <SelectContent>
+                      {courseLevel.map((level) =>
+                      (
+                        <SelectItem key={level.value} value={level.value}>
+                          {level.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
           <FormField
             control={form.control}
             name="info.requirements"
@@ -398,7 +440,7 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                 <FormControl>
                   <>
                     {courseInfo.qa.map((q, index) => (
-                      <div className='grid grid-cols-2 gap-5'>
+                      <div key={index} className='grid grid-cols-2 gap-5'>
                         <Input
                           key={index}
                           value={q.question}

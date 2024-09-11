@@ -1,6 +1,9 @@
+import PageNotFound from '@/app/not-found'
 import { IconPlay, IconStudy, IconUser } from '@/components/icons'
 import { Button } from '@/components/ui/button'
+import { courseLevelTitle } from '@/constants'
 import { getCourseBySlug } from '@/lib/actions/course.actions'
+import { ECourseStatus } from '@/types/enum'
 import Image from 'next/image'
 import React from 'react'
 
@@ -15,9 +18,10 @@ const page = async ({
   if (!data) {
     return null
   }
+  if (data.status !== ECourseStatus.APPROVED) return <PageNotFound />
   const videoId = data?.intro_url.split('v=')[1];
   return (
-    <div className='grid lg:grid-cols-[2fr,1fr] gap-10'>
+    <div className='grid lg:grid-cols-[2fr,1fr] gap-10 min-h-screen'>
       <div>
         <div className='relative aspect-video mb-5'>
           {data.intro_url ?
@@ -32,7 +36,7 @@ const page = async ({
             </>
             :
             <Image
-              src={'https://images.unsplash.com/photo-1530092285049-1c42085fd395?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
+              src={data.image}
               alt='coure_image'
               fill
               className='w-full h-full object-cover rounded-lg'
@@ -51,7 +55,7 @@ const page = async ({
           <div className='grid grid-cols-4 mb-10 gap-5'>
             <BoxInfor title='Bài học'>100</BoxInfor>
             <BoxInfor title='Lượt xem'>10.000</BoxInfor>
-            <BoxInfor title='Trình độ'>Trung Bình</BoxInfor>
+            <BoxInfor title='Trình độ'>{courseLevelTitle[data.level]}</BoxInfor>
             <BoxInfor title='Thời lượng'>1h30m</BoxInfor>
           </div>
         </BoxSection>
