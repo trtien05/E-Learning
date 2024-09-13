@@ -28,7 +28,7 @@ const CourseItem = ({ data }: { data: ICourse }) => {
           alt='course_image'
           width={300}
           height={200}
-          src={'https://images.unsplash.com/photo-1530092285049-1c42085fd395?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
+          src={`${data.image}`}
           className='w-full h-full object-cover rounded-lg'
           sizes='@media(min-width: 640px) 300px, 100vw'
           priority={true}

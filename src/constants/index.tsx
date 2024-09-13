@@ -57,7 +57,6 @@ export const courseStatus: {
       title: 'Đã duyệt',
       value: ECourseStatus.APPROVED,
       className: 'text-green-500 bg-green-500'
-
     },
     {
       title: 'Chờ duyệt',
@@ -97,5 +96,6 @@ export const courseLevelTitle: Record<ECourseLevel, string> = {
 }
 
 export const commonClassName = {
-  status: 'bg-opacity-10 border border-current rounded-md font-medium px-3 py-1'
+  status: 'bg-opacity-10 border border-current rounded-md font-medium px-3 py-1',
+  paginationButton: 'size-10 rounded-md border-[2px] borderDarkMode bgDarkMode flex items-center justify-center hover:border-primary transition-all hover:text-primary'
 }

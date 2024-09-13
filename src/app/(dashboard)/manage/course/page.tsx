@@ -1,10 +1,13 @@
 import CourseManage from '@/components/course/CourseManage'
+import { getAllCourses } from '@/lib/actions/course.actions'
 import React from 'react'
 
-const page = () => {
+const page = async () => {
+  const courses = await getAllCourses() || [];
+
   return (
     <>
-      <CourseManage></CourseManage>
+      <CourseManage courses={JSON.parse(JSON.stringify(courses))} />
     </>
   )
 }
