@@ -6,7 +6,6 @@ import React from 'react'
 
 
 const CourseItem = ({ data }: { data: ICourse }) => {
-  console.log(data)
   const courseInfo = [
     {
       title: data.views,

@@ -12,7 +12,7 @@ import React from 'react'
 const Sidebar = () => {
   const { userId } = useAuth();
   return (
-    <div className='hidden p-5 border-r border-r-gray-200 bg-white lg:flex flex-col dark:border-opacity-10 dark:bg-grayDarker fixed top-0 left-0 bottom-0 w-[300px]'>
+    <div className='hidden p-5 border-r lg:flex flex-col bgDarkMode borderDarkMode fixed top-0 left-0 bottom-0 w-[300px]'>
       <a href="/" className='font-bold text-3xl inline-block mb-5'>
         <span className='text-primary'>E</span>
         duVerse

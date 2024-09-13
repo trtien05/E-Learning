@@ -116,7 +116,7 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
           },
         }
       })
-      if (values.slug) {
+      if (values.slug !== data.slug) {
         router.replace(`/manage/course/update?slug=${values.slug}`)
       }
       if (res?.success) {
@@ -130,7 +130,6 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
   }
   //Theo dõi hình ảnh
   const imageWatch = form.watch("image");
-  console.log('imageWatch', imageWatch)
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">

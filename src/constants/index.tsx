@@ -49,39 +49,44 @@ export const menuItems: {
 
 export const courseStatus: {
   title: string,
-  value: ECourseStatus
+  value: ECourseStatus,
+  className?: string
 }[] =
   [
     {
       title: 'Đã duyệt',
-      value: ECourseStatus.APPROVED
+      value: ECourseStatus.APPROVED,
+      className: 'text-green-500 bg-green-500'
+
     },
     {
       title: 'Chờ duyệt',
-      value: ECourseStatus.PENDING
+      value: ECourseStatus.PENDING,
+      className: 'text-orange-500 bg-orange-500'
     },
     {
       title: 'Từ chối',
-      value: ECourseStatus.REJECTED
+      value: ECourseStatus.REJECTED,
+      className: 'text-red-500 bg-red-500'
     },
   ]
 
 export const courseLevel: {
   title: string,
-  value: ECourseLevel
+  value: ECourseLevel,
 }[] =
   [
     {
       title: 'Dễ',
-      value: ECourseLevel.BEGINNER
+      value: ECourseLevel.BEGINNER,
     },
     {
       title: 'Trung bình',
-      value: ECourseLevel.INTERMEDIATE
+      value: ECourseLevel.INTERMEDIATE,
     },
     {
       title: 'Khó',
-      value: ECourseLevel.ADVANCED
+      value: ECourseLevel.ADVANCED,
     },
   ]
 
@@ -89,4 +94,8 @@ export const courseLevelTitle: Record<ECourseLevel, string> = {
   [ECourseLevel.BEGINNER]: "Dễ",
   [ECourseLevel.INTERMEDIATE]: "Trung bình",
   [ECourseLevel.ADVANCED]: "Khó",
+}
+
+export const commonClassName = {
+  status: 'bg-opacity-10 border border-current rounded-md font-medium px-3 py-1'
 }
