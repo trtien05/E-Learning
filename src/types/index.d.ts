@@ -1,7 +1,8 @@
 export type TMenuItems = {
     url: string,
     title: string,
-    icon?: React.ReactNode
+    icon?: React.ReactNode,
+    onlyIcon?: boolean
 }
 
 export type TActiveLinkProps = {

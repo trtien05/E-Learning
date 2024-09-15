@@ -40,13 +40,12 @@ const Sidebar = () => {
   )
 }
 
-function MenuItem({ url = "/", title = "", icon }: TMenuItems) {
-
+export function MenuItem({ url = "/", title = "", icon, onlyIcon }: TMenuItems) {
   return (
     <li>
       <ActiveLink url={url}>
         {icon}
-        {title}
+        {onlyIcon ? null : title}
       </ActiveLink>
     </li>
   )

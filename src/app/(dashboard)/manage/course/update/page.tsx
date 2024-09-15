@@ -1,5 +1,5 @@
 import CourseUpdate from '@/components/course/CourseUpdate'
-import Heading from '@/components/typography/Heading'
+import { Heading } from '@/components/common'
 import { getCourseBySlug } from '@/lib/actions/course.actions';
 import React from 'react'
 

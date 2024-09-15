@@ -6,6 +6,12 @@ import { getCourseBySlug } from '@/lib/actions/course.actions'
 import { ECourseStatus } from '@/types/enum'
 import Image from 'next/image'
 import React from 'react'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const page = async ({
   params
@@ -54,7 +60,7 @@ const page = async ({
         <BoxSection title='Thông tin'>
           <div className='grid grid-cols-4 mb-10 gap-5'>
             <BoxInfor title='Bài học'>100</BoxInfor>
-            <BoxInfor title='Lượt xem'>10.000</BoxInfor>
+            <BoxInfor title='Lượt xem'>{data.views.toLocaleString()}</BoxInfor>
             <BoxInfor title='Trình độ'>{courseLevelTitle[data.level]}</BoxInfor>
             <BoxInfor title='Thời lượng'>1h30m</BoxInfor>
           </div>
@@ -111,10 +117,14 @@ const page = async ({
 
         <BoxSection title='Q.A'>
           {data.info.qa.map((qa, index) => (
-            <div key={index}>
-              <div>{qa.question}</div>
-              <div>{qa.answer}</div>
-            </div>
+            <Accordion type="single" collapsible key={index}>
+              <AccordionItem value="item-1">
+                <AccordionTrigger>{qa.question}</AccordionTrigger>
+                <AccordionContent>
+                  {qa.answer}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           ))}
         </BoxSection>
 
@@ -122,8 +132,12 @@ const page = async ({
       <div>
         <div className="bg-white rounded-lg p-5">
           <div className="flex items-center gap-2 mb-3">
-            <strong className="text-primary font-bold text-xl">{data.price}</strong>
-            <span className="text-slate-500 line-through">{data.sale_price}</span>
+            <strong className="text-primary font-bold text-xl">
+              {data.price.toLocaleString()}đ
+            </strong>
+            <span className="text-slate-500 line-through">
+              {data.sale_price.toLocaleString()}đ
+            </span>
             <span className='bg-primary text-primary bg-opacity-10 px-3 py-1 rounded-lg ml-auto inline-block font-semibold text-sm'>
               {Math.floor((data.price / data.sale_price) * 100)}%
             </span>

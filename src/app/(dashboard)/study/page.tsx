@@ -1,7 +1,6 @@
 import { CourseGrid } from '@/components/common'
 import CourseItem from '@/components/course/CourseItem'
-import Heading from '@/components/typography/Heading'
-import React from 'react'
+import { Heading } from '@/components/common'
 import { getAllCourses } from '@/lib/actions/course.actions'
 
 const page = async () => {

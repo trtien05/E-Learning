@@ -11,7 +11,7 @@ const ActiveLink = ({ url, children }: TActiveLinkProps) => {
     <Link href={url}
       className={`p-3 rounded-md flex items-center gap-3 dark:text-grayDark text-base transition-all 
         ${isActive ?
-          'text-primary bg-primary bg-opacity-10 font-medium svg-animate'
+          'text-primary bg-primary bg-opacity-10 font-semibold svg-animate'
           :
           'hover:text-primary hover:bg-primary hover:bg-opacity-10'
         }`
