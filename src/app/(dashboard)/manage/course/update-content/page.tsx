@@ -1,12 +1,27 @@
+import { Heading } from '@/components/common'
+import CourseUpdateContent from '@/components/course/CourseUpdateContent'
+import { IconEdit } from '@/components/icons'
+import { getCourseBySlug } from '@/lib/actions/course.actions'
 import React from 'react'
 
-const page = ({ params }: {
-  params: {
+const page = async ({ searchParams }: {
+  searchParams: {
     slug: string
   }
 }) => {
+  const findCourse = await getCourseBySlug({ slug: searchParams.slug });
+  if (!findCourse) return <div>Không tìm thấy khóa học</div>
   return (
-    <div>page</div>
+    <>
+      <Heading className='mb-10'>
+        Nội dung: <strong className="text-primary">{findCourse.title}</strong>
+      </Heading>
+      <CourseUpdateContent
+        course={JSON.parse(JSON.stringify(findCourse))}
+      >
+
+      </CourseUpdateContent>
+    </>
   )
 }
 
