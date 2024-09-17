@@ -1,6 +1,7 @@
 "use server";
 import Course, { ICourse } from "@/database/course.model";
 import Lecture from "@/database/lecture.model";
+import Lesson from "@/database/lesson.model";
 import { connectToDatabase } from "@/lib/mongoose";
 import { TCourseUpdateParams, TCreateCourseParams, TUpdateCoureParams } from "@/types";
 import { revalidatePath } from "next/cache";
@@ -15,6 +16,13 @@ export async function getCourseBySlug({ slug }: { slug: string }): Promise<TCour
       select: '_id title',
       match: {
         _destroy: false
+      },
+      populate: {
+        path: 'lessons',
+        model: Lesson,
+        match: {
+          _destroy: false
+        },
       }
     });
     return findCourse;

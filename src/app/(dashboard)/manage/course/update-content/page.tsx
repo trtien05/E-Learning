@@ -1,6 +1,5 @@
 import { Heading } from '@/components/common'
 import CourseUpdateContent from '@/components/course/CourseUpdateContent'
-import { IconEdit } from '@/components/icons'
 import { getCourseBySlug } from '@/lib/actions/course.actions'
 import React from 'react'
 

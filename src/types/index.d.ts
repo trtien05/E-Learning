@@ -1,5 +1,6 @@
 import { ICourse } from "@/database/course.model"
 import { ILecture } from "@/database/lecture.model"
+import { ILesson } from "@/database/lesson.model"
 
 export type TMenuItems = {
     url: string,
@@ -34,8 +35,14 @@ export type TUpdateCoureParams = {
     path?: string;
 }
 
+export type TUpdateCourseLecture = {
+    _id: string;
+    title: string;
+    lessons: ILesson[];
+}
+
 export interface TCourseUpdateParams extends Omit<ICourse, 'lectures'> {
-    lectures: ILecture[];
+    lectures: TUpdateCourseLecture[];
 }
 //Lecture
 export type TCreateLectureParams = {
@@ -55,3 +62,12 @@ export type TUpdateLectureParams = {
     }
 }
 
+//Lesson
+export type TCreateLessonParams = {
+    lecture: string;
+    course: string;
+    title?: string;
+    order?: string;
+    slug?: string;
+    path?: string;
+}

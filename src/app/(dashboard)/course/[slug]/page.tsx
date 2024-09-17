@@ -38,7 +38,8 @@ const page = async ({
                 width="1519"
                 height="569"
                 src={`https://www.youtube.com/embed/${videoId}`}
-                title="WINTER SONATA (BẢN TÌNH CA MÙA ĐÔNG) | NHẠC PHIM - PIANO COVER" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                title=""
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 className='w-full h-full object-fill'
               ></iframe>
             </>
@@ -77,24 +78,15 @@ const page = async ({
                 className="w-full"
                 key={lecture._id}
               >
-                <AccordionItem value={lecture._id}>
+                <AccordionItem value={JSON.parse(JSON.stringify(lecture._id))}>
                   <AccordionTrigger>
                     <div className='flex items-center gap-3 justify-between pr-5 w-full'>
                       <div>{lecture.title}</div>
-                      <div className='flex gap-2'>
-                        <span className='border-[2px] p-2 rounded-md'>
-                          <IconEdit className='size-5' />
-                        </span>
-                        <span className='border-[2px] p-2 rounded-md' >
-                          <IconDelete className='size-5' />
-                        </span>
-                      </div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
                   </AccordionContent>
                 </AccordionItem>
-
               </Accordion>
             ))}
           </div>
