@@ -3,11 +3,11 @@ import { getAllCourses } from '@/lib/actions/course.actions'
 import React from 'react'
 
 const page = async () => {
-  const courses = await getAllCourses() || [];
+  const courses = await getAllCourses();
 
   return (
     <>
-      <CourseManage courses={JSON.parse(JSON.stringify(courses))} />
+      <CourseManage courses={courses ? JSON.parse(JSON.stringify(courses)) : []} />
     </>
   )
 }

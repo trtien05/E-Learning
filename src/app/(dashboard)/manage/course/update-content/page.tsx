@@ -18,9 +18,7 @@ const page = async ({ searchParams }: {
       </Heading>
       <CourseUpdateContent
         course={JSON.parse(JSON.stringify(findCourse))}
-      >
-
-      </CourseUpdateContent>
+      ></CourseUpdateContent>
     </>
   )
 }

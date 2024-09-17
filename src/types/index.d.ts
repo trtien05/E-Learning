@@ -1,3 +1,6 @@
+import { ICourse } from "@/database/course.model"
+import { ILecture } from "@/database/lecture.model"
+
 export type TMenuItems = {
     url: string,
     title: string,
@@ -18,6 +21,8 @@ export type TCreateUserParams = {
     avatar?: string;
 }
 
+
+//Course
 export type TCreateCourseParams = {
     title: string;
     slug: string;
@@ -29,6 +34,10 @@ export type TUpdateCoureParams = {
     path?: string;
 }
 
+export interface TCourseUpdateParams extends Omit<ICourse, 'lectures'> {
+    lectures: ILecture[];
+}
+//Lecture
 export type TCreateLectureParams = {
     course: string;
     title?: string;
@@ -45,3 +54,4 @@ export type TUpdateLectureParams = {
         path?: string;
     }
 }
+

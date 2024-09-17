@@ -1,5 +1,5 @@
 import PageNotFound from '@/app/not-found'
-import { IconPlay, IconStudy, IconUser } from '@/components/icons'
+import { IconDelete, IconEdit, IconPlay, IconStudy, IconUser } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { courseLevelTitle } from '@/constants'
 import { getCourseBySlug } from '@/lib/actions/course.actions'
@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { ILecture } from '@/database/lecture.model'
 
 const page = async ({
   params
@@ -24,6 +25,7 @@ const page = async ({
   if (!data) {
     return null
   }
+  const lectures = data.lectures || [];
   if (data.status !== ECourseStatus.APPROVED) return <PageNotFound />
   const videoId = data?.intro_url.split('v=')[1];
   return (
@@ -66,6 +68,37 @@ const page = async ({
           </div>
         </BoxSection>
 
+        <BoxSection title='Nội dung khóa học'>
+          <div className="flex flex-col gap-3">
+            {lectures.map((lecture: ILecture) => (
+              <Accordion
+                type="single"
+                collapsible
+                className="w-full"
+                key={lecture._id}
+              >
+                <AccordionItem value={lecture._id}>
+                  <AccordionTrigger>
+                    <div className='flex items-center gap-3 justify-between pr-5 w-full'>
+                      <div>{lecture.title}</div>
+                      <div className='flex gap-2'>
+                        <span className='border-[2px] p-2 rounded-md'>
+                          <IconEdit className='size-5' />
+                        </span>
+                        <span className='border-[2px] p-2 rounded-md' >
+                          <IconDelete className='size-5' />
+                        </span>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                  </AccordionContent>
+                </AccordionItem>
+
+              </Accordion>
+            ))}
+          </div>
+        </BoxSection>
 
         <BoxSection title='Yêu cầu'>
           {data.info.requirements.map((r, index) => (
