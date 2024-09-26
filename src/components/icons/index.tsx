@@ -1,4 +1,3 @@
-
 export { default as IconPlay } from './IconPlay'
 export { default as IconStudy } from './IconStudy'
 export { default as IconCourse } from './IconCourse'
@@ -10,6 +9,8 @@ export { default as IconStar } from './IconStar'
 export { default as IconClock } from './IconClock'
 export { default as IconAdd } from './IconAdd'
 export { default as IconEdit } from './IconEdit'
+export { default as IconCheck } from './IconCheck'
+export { default as IconCancel } from './IconCancel'
 export { default as IconDelete } from './IconDelete'
 
 

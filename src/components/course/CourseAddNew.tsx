@@ -45,7 +45,7 @@ export function CourseAddNew() {
         })
       }
       const res = await createCourse(data);
-      if (res?.status) {
+      if (res?.success) {
         toast.success("Tạo khóa học thành công")
       }
       if (res?.data) {
