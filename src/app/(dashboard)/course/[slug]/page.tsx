@@ -13,6 +13,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { ILecture } from '@/database/lecture.model'
+import { TUpdateCourseLecture } from '@/types'
 
 const page = async ({
   params
@@ -71,7 +72,7 @@ const page = async ({
 
         <BoxSection title='Nội dung khóa học'>
           <div className="flex flex-col gap-3">
-            {lectures.map((lecture: ILecture) => (
+            {lectures.map((lecture: TUpdateCourseLecture) => (
               <Accordion
                 type="single"
                 collapsible

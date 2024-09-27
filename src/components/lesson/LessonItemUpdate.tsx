@@ -5,10 +5,14 @@ import { updateLesson } from '@/lib/actions/lesson.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ILesson } from "@/database/lesson.model";
 import Link from 'next/link';
-import React from 'react'
+import React, { useRef } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
+import { Editor } from '@tinymce/tinymce-react';
+import { editorOptions } from '@/constants';
+import { useTheme } from 'next-themes';
+
 
 const formSchema = z.object({
   slug: z.string().optional(),
@@ -17,6 +21,8 @@ const formSchema = z.object({
   content: z.string().optional(),
 });
 const LessonItemUpdate = ({ lesson }: { lesson: ILesson }) => {
+  const editorRef = useRef<any>(null);
+  const { theme } = useTheme();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -94,16 +100,26 @@ const LessonItemUpdate = ({ lesson }: { lesson: ILesson }) => {
               control={form.control}
               name="content"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="col-start-1 col-end-3">
                   <FormLabel>Nội dung</FormLabel>
                   <FormControl>
+                    <Editor
+                      apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
+                      onInit={(_evt, editor) => {
+                        (editorRef.current = editor).setContent(
+                          lesson.content || ""
+                        );
+                      }}
+                      value={field.value}
+                      {...editorOptions(field, theme)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <div className="flex justify-end gap-5 items-center">
+          <div className="flex justify-end gap-5 items-center mt-8">
             <Button type='submit'>Cập nhật</Button>
             <Link href={"#"}>Xem trước</Link>
           </div>
