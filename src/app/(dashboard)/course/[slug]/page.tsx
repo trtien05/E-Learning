@@ -12,8 +12,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { ILecture } from '@/database/lecture.model'
 import { TUpdateCourseLecture } from '@/types'
+import { ILesson } from '@/database/lesson.model'
 
 const page = async ({
   params
@@ -79,13 +79,25 @@ const page = async ({
                 className="w-full"
                 key={lecture._id}
               >
-                <AccordionItem value={JSON.parse(JSON.stringify(lecture._id))}>
+                <AccordionItem value={lecture._id.toString()}>
                   <AccordionTrigger>
                     <div className='flex items-center gap-3 justify-between pr-5 w-full'>
                       <div>{lecture.title}</div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent className='!bg-transparent border-none p-0'>
+                    <div className='flex flex-col gap-3'>
+                      {lecture.lessons.map((lesson: ILesson) => (
+                        <div key={lesson._id} className='flex items-center gap-3 bgDarkMode border borderDarkMode rounded-lg p-3 text-sm font-medium'>
+                          <IconPlay className='size-4' />
+                          <h4>{lesson.title}</h4>
+                          <span className='ml-auto text-xs font-semibold'>
+                            {lesson.duration} phút
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -144,7 +156,7 @@ const page = async ({
         <BoxSection title='Q.A'>
           {data.info.qa.map((qa, index) => (
             <Accordion type="single" collapsible key={index}>
-              <AccordionItem value="item-1">
+              <AccordionItem value={qa.question}>
                 <AccordionTrigger>{qa.question}</AccordionTrigger>
                 <AccordionContent>
                   {qa.answer}
