@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/accordion"
 import { TUpdateCourseLecture } from '@/types'
 import { ILesson } from '@/database/lesson.model'
+import LessonItem from '@/components/lesson/LessonItem'
 
 const page = async ({
   params
@@ -86,18 +87,14 @@ const page = async ({
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className='!bg-transparent border-none p-0'>
-                    <div className='flex flex-col gap-3'>
-                      {lecture.lessons.map((lesson: ILesson) => (
-                        <div key={lesson._id} className='flex items-center gap-3 bgDarkMode border borderDarkMode rounded-lg p-3 text-sm font-medium'>
-                          <IconPlay className='size-4' />
-                          <h4>{lesson.title}</h4>
-                          <span className='ml-auto text-xs font-semibold'>
-                            {lesson.duration} phút
-                          </span>
-                        </div>
+                    <div className='flex flex-col gap-3  mt-5'>
+                      {lecture.lessons.map((lesson) => (
+                        <LessonItem
+                          key={lesson._id}
+                          lesson={lesson}
+                        />
                       ))}
                     </div>
-
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
