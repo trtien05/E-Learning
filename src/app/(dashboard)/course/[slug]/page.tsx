@@ -15,6 +15,7 @@ import {
 import { TUpdateCourseLecture } from '@/types'
 import { ILesson } from '@/database/lesson.model'
 import LessonItem from '@/components/lesson/LessonItem'
+import LessonContent from '@/components/lesson/LessonContent'
 
 const page = async ({
   params
@@ -72,34 +73,7 @@ const page = async ({
         </BoxSection>
 
         <BoxSection title='Nội dung khóa học'>
-          <div className="flex flex-col gap-3">
-            {lectures.map((lecture: TUpdateCourseLecture) => (
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full"
-                key={lecture._id}
-              >
-                <AccordionItem value={lecture._id.toString()}>
-                  <AccordionTrigger>
-                    <div className='flex items-center gap-3 justify-between pr-5 w-full'>
-                      <div>{lecture.title}</div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className='!bg-transparent border-none p-0'>
-                    <div className='flex flex-col gap-3  mt-5'>
-                      {lecture.lessons.map((lesson) => (
-                        <LessonItem
-                          key={lesson._id}
-                          lesson={lesson}
-                        />
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            ))}
-          </div>
+          <LessonContent lectures={lectures} course='' slug='' />
         </BoxSection>
 
         <BoxSection title='Yêu cầu'>

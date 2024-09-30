@@ -1,5 +1,7 @@
 import LessonNavigation from '@/app/(dashboard)/[course]/lesson/LessonNavigation'
 import PageNotFound from '@/app/not-found'
+import { Heading } from '@/components/common'
+import LessonContent from '@/components/lesson/LessonContent'
 import LessonItem from '@/components/lesson/LessonItem'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { getCourseBySlug } from '@/lib/actions/course.actions'
@@ -35,7 +37,7 @@ const page = async ({ searchParams, params }:
   const nextLesson = listLesson?.[currentLesson + 1];
   const lectures = findCourse?.lectures;
   return (
-    <div className='grid lg:grid-cols-[2fr,1fr] gap-10 min-h-screen'>
+    <div className='grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start'>
       <div>
         <div className='relative aspect-video mb-5'>
           <iframe
@@ -43,49 +45,24 @@ const page = async ({ searchParams, params }:
             className='w-full h-full object-fill'
           ></iframe>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-5">
           <LessonNavigation
             prevLesson={!prevLesson ? "" : `/${course}/lesson?slug=${prevLesson?.slug}`}
             nextLesson={!nextLesson ? "" : `/${course}/lesson?slug=${nextLesson?.slug}`}
           >
           </LessonNavigation>
-          <div>
-
-          </div>
+          <div></div>
+        </div>
+        <Heading className='mb-10'>{lessonDetails.title}</Heading>
+        <div className="p-5 rounded-lg bgDarkMode border borderDarkMode entry-content">
+          <div
+            dangerouslySetInnerHTML={{ __html: lessonDetails.content || "" }}
+          ></div>
         </div>
       </div>
 
-      <div>
-        <div className="flex flex-col gap-3">
-          {lectures.map((lecture: TUpdateCourseLecture) => (
-            <Accordion
-              type="single"
-              collapsible
-              className="w-full"
-              key={lecture._id}
-            >
-              <AccordionItem value={lecture._id.toString()}>
-                <AccordionTrigger>
-                  <div className='flex items-center gap-3 justify-between pr-5 w-full'>
-                    <div>{lecture.title}</div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className='!bg-transparent border-none p-0'>
-                  <div className='flex flex-col gap-3'>
-                    {lecture.lessons.map((lesson) => (
-                      <LessonItem
-                        key={lesson._id}
-                        lesson={lesson}
-                        url={`/${course}/lesson?slug=${lesson.slug}`}
-                      />
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ))}
-        </div>
-
+      <div className="sticky top-5 right-0 max-h-[calc(100svh-100px)] overflow-y-auto">
+        <LessonContent lectures={lectures} course={course} slug={slug} />
       </div>
     </div>
   )
