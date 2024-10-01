@@ -7,15 +7,18 @@ import {
 } from '@/components/ui/accordion'
 import { TUpdateCourseLecture } from '@/types'
 import LessonItem from '@/components/lesson/LessonItem'
+import { IHistory } from '@/database/history.model'
 
 const LessonContent = ({
   lectures,
   course,
-  slug
+  slug,
+  histories
 }: {
   lectures: TUpdateCourseLecture[],
   course: string,
-  slug: string
+  slug: string,
+  histories: IHistory[]
 }
 ) => {
   return (
@@ -38,9 +41,10 @@ const LessonContent = ({
                 {lecture.lessons.map((lesson) => (
                   <LessonItem
                     key={lesson._id}
-                    lesson={lesson}
+                    lesson={lesson ? JSON.parse(JSON.stringify(lesson)) : {}}
                     url={!course ? "" : `/${course}/lesson?slug=${lesson.slug}`}
                     isActive={!slug ? false : lesson.slug === slug}
+                    isChecked={histories.some(el => el.lesson.toString() === lesson._id.toString())}
                   />
                 ))}
               </div>

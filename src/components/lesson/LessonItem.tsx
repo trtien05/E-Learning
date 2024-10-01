@@ -1,4 +1,7 @@
+'use client'
 import { IconPlay } from '@/components/icons'
+import { Checkbox } from '@/components/ui/checkbox'
+import { createHistory } from '@/lib/actions/history.actions'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import React from 'react'
@@ -6,19 +9,40 @@ import React from 'react'
 const LessonItem = ({
   lesson,
   url,
-  isActive
+  isActive = false,
+  isChecked = false,
 }: {
   lesson: {
-    title: string,
-    duration: number
+    title: string;
+    duration: number;
+    course: string;
+    _id: string;
   },
   url?: string,
-  isActive?: boolean
+  isActive?: boolean,
+  isChecked?: boolean
 }) => {
+  const handleCompleteLesson = async (checked: string | boolean) => {
+    try {
+      await createHistory({
+        course: lesson.course,
+        lesson: lesson._id,
+        checked
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
-    <div className={cn('flex items-center gap-2 bgDarkMode border borderDarkMode rounded-lg p-3 text-sm font-medium',
+    <div className={cn('flex items-center gap-2 bgDarkMode border borderDarkMode rounded-lg p-4 text-sm font-medium',
       isActive ? "text-primary font-semibold pointer-events-none" : ""
     )}>
+      {url &&
+        <Checkbox
+          defaultChecked={isChecked}
+          className='size-4 flex-shrink-0'
+          onCheckedChange={(checked) => handleCompleteLesson(checked)}
+        />}
       <IconPlay className='size-5 flex-shrink-0' />
       {url ? (
         <Link href={url} className='line-clamp-1'>

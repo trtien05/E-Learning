@@ -1,5 +1,5 @@
 import PageNotFound from '@/app/not-found'
-import { IconDelete, IconEdit, IconPlay, IconStudy, IconUser } from '@/components/icons'
+import { IconPlay, IconStudy, IconUser } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { courseLevelTitle } from '@/constants'
 import { getCourseBySlug } from '@/lib/actions/course.actions'
@@ -12,9 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { TUpdateCourseLecture } from '@/types'
-import { ILesson } from '@/database/lesson.model'
-import LessonItem from '@/components/lesson/LessonItem'
+
 import LessonContent from '@/components/lesson/LessonContent'
 
 const page = async ({
@@ -73,7 +71,7 @@ const page = async ({
         </BoxSection>
 
         <BoxSection title='Nội dung khóa học'>
-          <LessonContent lectures={lectures} course='' slug='' />
+          <LessonContent lectures={lectures} course='' slug='' histories={[]} />
         </BoxSection>
 
         <BoxSection title='Yêu cầu'>
