@@ -62,7 +62,7 @@ const page = async ({
         </BoxSection>
 
         <BoxSection title='Thông tin'>
-          <div className='grid grid-cols-4 mb-10 gap-5'>
+          <div className='grid grid-cols-4 mb-10 gap-5 '>
             <BoxInfor title='Bài học'>100</BoxInfor>
             <BoxInfor title='Lượt xem'>{data.views.toLocaleString()}</BoxInfor>
             <BoxInfor title='Trình độ'>{courseLevelTitle[data.level]}</BoxInfor>
@@ -137,7 +137,7 @@ const page = async ({
 
       </div>
       <div>
-        <div className="bg-white rounded-lg p-5">
+        <div className="bgDarkMode border borderDarkMode rounded-lg p-5">
           <div className="flex items-center gap-2 mb-3">
             <strong className="text-primary font-bold text-xl">
               {data.price.toLocaleString()}đ
@@ -169,7 +169,6 @@ const page = async ({
             </li>
           </ul>
           <Button variant='primary' className='w-full'>Mua Khóa Học</Button>
-
         </div>
       </div>
     </div>
@@ -188,7 +187,7 @@ function BoxSection({ title, children }: { title: string, children: React.ReactN
 function BoxInfor({ title, children }: { title: string, children: React.ReactNode }) {
   return (
     <>
-      <div className="bg-white p-5 rounded-lg">
+      <div className="bgDarkMode border borderDarkMode p-5 rounded-lg">
         <h4 className='text-sm text-slate-400 font-normal'>{title}</h4>
         <h3 className='font-bold'>{children}</h3>
       </div>
