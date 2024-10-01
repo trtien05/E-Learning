@@ -5,6 +5,9 @@ import LessonContent from '@/components/lesson/LessonContent'
 import { getCourseBySlug } from '@/lib/actions/course.actions'
 import { getHistories } from '@/lib/actions/history.actions'
 import { findAllLessons, getLessonBySlug } from '@/lib/actions/lesson.actions'
+import { getUserInfo } from '@/lib/actions/user.actions'
+import { EUserRole } from '@/types/enum'
+import { auth } from '@clerk/nextjs/server'
 import React from 'react'
 
 const page = async ({ searchParams, params }:
@@ -17,6 +20,11 @@ const page = async ({ searchParams, params }:
     }
   }
 ) => {
+
+  const { userId } = auth();
+  if (!userId) return <PageNotFound />
+  const findUser = await getUserInfo({ userId });
+  if (!findUser) return <PageNotFound />
   const course = params.course;
   const slug = searchParams.slug;
   if (!course || !slug) return <PageNotFound />
@@ -36,7 +44,12 @@ const page = async ({ searchParams, params }:
   const lectures = findCourse?.lectures;
   const histories = await getHistories({ course: courseId })
   const completePercentage = ((histories?.length || 0) / (listLesson?.length || 1)) * 100;
-  console.log(completePercentage);
+  if (
+    findUser.courses.includes(courseId as any)
+    // || findUser.role !== EUserRole.ADMIN
+  )
+    return <PageNotFound />
+
   return (
     <div className='block xl:grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start'>
       <div>
