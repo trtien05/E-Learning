@@ -36,7 +36,7 @@ const page = async ({ searchParams, params }:
   const lectures = findCourse?.lectures;
   const histories = await getHistories({ course: lessonDetails.course })
   return (
-    <div className='grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start'>
+    <div className='block xl:grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start'>
       <div>
         <div className='relative aspect-video mb-5'>
           <iframe
