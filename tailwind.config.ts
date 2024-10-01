@@ -12,7 +12,8 @@ const config: Config = {
 				'3xl': '2000px'
 			},
 			colors: {
-				primary: '#4E06FE',
+				primary: "#8873EF",
+				secondary: "#4E06FE",
 				grayDarkest: '#131316',
 				grayDarker: '#212126',
 				grayDark: '#9394A1'

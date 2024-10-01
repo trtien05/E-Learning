@@ -27,7 +27,8 @@ const LessonItem = ({
       await createHistory({
         course: lesson.course,
         lesson: lesson._id,
-        checked
+        checked,
+        path: url
       })
     } catch (error) {
       console.log(error)
@@ -35,17 +36,17 @@ const LessonItem = ({
   }
   return (
     <div className={cn('flex items-center gap-2 bgDarkMode border borderDarkMode rounded-lg p-4 text-sm font-medium',
-      isActive ? "text-primary font-semibold pointer-events-none" : ""
+      isActive ? "text-primary font-semibold " : ""
     )}>
       {url &&
         <Checkbox
           defaultChecked={isChecked}
-          className='size-4 flex-shrink-0'
+          className='flex-shrink-0'
           onCheckedChange={(checked) => handleCompleteLesson(checked)}
         />}
       <IconPlay className='size-5 flex-shrink-0' />
       {url ? (
-        <Link href={url} className='line-clamp-1'>
+        <Link href={url} className={cn('line-clamp-1', isActive && "pointer-events-none")}>
           {lesson.title}
         </Link>
       ) : <h4 className='line-clamp-1'>{lesson.title}</h4>}

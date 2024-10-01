@@ -88,5 +88,6 @@ export type TUpdateLessonParams = {
 export type TCreateHistoryParams = {
     course: string,
     lesson: string,
-    checked: boolean | string
+    checked: boolean | string,
+    path?: string
 }

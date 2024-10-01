@@ -34,7 +34,9 @@ const page = async ({ searchParams, params }:
   const prevLesson = listLesson?.[currentLesson - 1];
   const nextLesson = listLesson?.[currentLesson + 1];
   const lectures = findCourse?.lectures;
-  const histories = await getHistories({ course: lessonDetails.course })
+  const histories = await getHistories({ course: courseId })
+  const completePercentage = ((histories?.length || 0) / (listLesson?.length || 1)) * 100;
+  console.log(completePercentage);
   return (
     <div className='block xl:grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start'>
       <div>
@@ -62,7 +64,11 @@ const page = async ({ searchParams, params }:
 
       <div className="sticky top-5 right-0 max-h-[calc(100svh-100px)] overflow-y-auto">
         <div className='w-full rounded-full bgDarkMode border borderDarkMode mb-2 h-3'>
-          <div className='w-0 bg-primary h-full rounded-full'></div>
+          <div className='bg-primary h-full rounded-full transition-all duration-300'
+            style={{
+              width: `${completePercentage}%`
+            }}
+          ></div>
         </div>
         <LessonContent
           lectures={lectures}
