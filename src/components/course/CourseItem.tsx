@@ -4,8 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-
-const CourseItem = ({ data }: { data: ICourse }) => {
+const CourseItem = ({ data, cta, url }: { data: ICourse, cta?: string, url?: string }) => {
   const courseInfo = [
     {
       title: data.views,
@@ -20,10 +19,10 @@ const CourseItem = ({ data }: { data: ICourse }) => {
       icon: (className: string) => <IconClock className={className} />
     },
   ]
-
+  const courseUrl = url ? url : `/course/${data.slug}`;
   return (
     <div className='bg-white border dark:bg-grayDarker dark:border-opacity-10 border-gray-200 p-4 rounded-2xl'>
-      <Link href={`/course/${data.slug}`} className='block h-[180px] relative'>
+      <Link href={courseUrl} className='block h-[180px] relative'>
         <Image
           alt='course_image'
           width={300}
@@ -53,10 +52,10 @@ const CourseItem = ({ data }: { data: ICourse }) => {
           </span>
         </div>
         <Link
-          href={`/course/${data.slug}`}
-          className='flex items-center justify-center w-full mt-10 rounded-lg text-white bg-primary font-semibold h-9'
+          href={courseUrl}
+          className='flex items-center justify-center w-full mt-10 rounded-lg text-white bg-primary font-semibold h-12'
         >
-          Xem chi tiết
+          {cta || "Xem chi tiết"}
         </Link>
       </div>
     </div>

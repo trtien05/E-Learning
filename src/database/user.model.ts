@@ -1,7 +1,8 @@
 import { EUserRole, EUserStatus } from "@/types/enum";
-import { Document, model, models, Schema } from "mongoose";
+import { Document, Schema, model, models } from "mongoose";
 
 export interface IUser extends Document {
+  _id: string;
   clerkId: string;
   name: string;
   username: string;
@@ -12,7 +13,6 @@ export interface IUser extends Document {
   role: EUserRole;
   created_at: Date;
 }
-
 const userSchema = new Schema<IUser>({
   clerkId: {
     type: String,
@@ -22,13 +22,13 @@ const userSchema = new Schema<IUser>({
   },
   username: {
     type: String,
-    required: true,
     unique: true,
+    required: true,
   },
   email: {
     type: String,
-    required: true,
     unique: true,
+    required: true,
   },
   avatar: {
     type: String,
@@ -36,7 +36,7 @@ const userSchema = new Schema<IUser>({
   courses: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Course", //Liên kết tới model khác
+      ref: "Course",
     },
   ],
   created_at: {
@@ -45,7 +45,6 @@ const userSchema = new Schema<IUser>({
   },
   role: {
     type: String,
-    //lấy 1 trong các giá trị trong enum
     enum: Object.values(EUserRole),
     default: EUserRole.USER,
   },
@@ -55,7 +54,9 @@ const userSchema = new Schema<IUser>({
     default: EUserStatus.ACTIVE,
   },
 });
-
-//sử dụng model User nếu có còn không thì tạo User
+userSchema.index(
+  { email: 1 },
+  { unique: true, partialFilterExpression: { email: { $ne: null } } }
+);
 const User = models.User || model<IUser>("User", userSchema);
 export default User;

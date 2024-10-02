@@ -1,4 +1,5 @@
 import LessonNavigation from '@/app/(dashboard)/[course]/lesson/LessonNavigation'
+import LessonSaveUrl from '@/app/(dashboard)/[course]/lesson/LessonSaveUrl'
 import PageNotFound from '@/app/not-found'
 import { Heading } from '@/components/common'
 import LessonContent from '@/components/lesson/LessonContent'
@@ -45,13 +46,14 @@ const page = async ({ searchParams, params }:
   const histories = await getHistories({ course: courseId })
   const completePercentage = ((histories?.length || 0) / (listLesson?.length || 1)) * 100;
   if (
-    findUser.courses.includes(courseId as any)
+    !findUser.courses.includes(courseId as any)
     // || findUser.role !== EUserRole.ADMIN
   )
     return <PageNotFound />
 
   return (
     <div className='block xl:grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start'>
+      <LessonSaveUrl course={course} url={`${course}/lesson?slug=${slug}`} />
       <div>
         <div className='relative aspect-video mb-5'>
           <iframe

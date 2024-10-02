@@ -1,17 +1,21 @@
 import { CourseGrid } from '@/components/common'
 import CourseItem from '@/components/course/CourseItem'
 import { Heading } from '@/components/common'
-import { getAllCourses } from '@/lib/actions/course.actions'
+import { getUserCourses } from '@/lib/actions/user.actions';
 
 const page = async () => {
-  const courses = await getAllCourses() || [];
-
+  const courses = await getUserCourses();
   return (
     <>
       <Heading>Khu vực học tập</Heading>
       <CourseGrid>
-        {courses.length > 0 && courses?.map((item) => (
-          <CourseItem key={item.slug} data={item} />
+        {courses && courses.length > 0 && courses?.map((item) => (
+          <CourseItem
+            key={item.slug}
+            data={item}
+            cta="Tiếp tục học"
+            url="/"
+          />
         ))}
       </CourseGrid>
     </>
