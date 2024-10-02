@@ -7,7 +7,6 @@ import { getCourseBySlug } from '@/lib/actions/course.actions'
 import { getHistories } from '@/lib/actions/history.actions'
 import { findAllLessons, getLessonBySlug } from '@/lib/actions/lesson.actions'
 import { getUserInfo } from '@/lib/actions/user.actions'
-import { EUserRole } from '@/types/enum'
 import { auth } from '@clerk/nextjs/server'
 import React from 'react'
 
@@ -21,7 +20,6 @@ const page = async ({ searchParams, params }:
     }
   }
 ) => {
-
   const { userId } = auth();
   if (!userId) return <PageNotFound />
   const findUser = await getUserInfo({ userId });
@@ -79,7 +77,7 @@ const page = async ({ searchParams, params }:
 
       <div className="sticky top-5 right-0 max-h-[calc(100svh-100px)] overflow-y-auto">
         <div className='w-full rounded-full bgDarkMode border borderDarkMode mb-2 h-3'>
-          <div className='bg-primary h-full rounded-full transition-all duration-300'
+          <div className='bg-gradient-to-r from-primary to-secondary h-full rounded-full transition-all duration-300'
             style={{
               width: `${completePercentage}%`
             }}

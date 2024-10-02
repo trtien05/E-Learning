@@ -97,7 +97,9 @@ export const courseLevelTitle: Record<ECourseLevel, string> = {
 
 export const commonClassName = {
   status: 'bg-opacity-10 border border-current rounded-md font-medium px-3 py-1 whitespace-nowrap',
-  paginationButton: 'size-10 rounded-md border-[2px] borderDarkMode bgDarkMode flex items-center justify-center hover:border-primary transition-all hover:text-primary'
+  paginationButton: 'size-10 rounded-md border-[2px] borderDarkMode bgDarkMode flex items-center justify-center hover:border-primary transition-all hover:text-primary',
+  btnPrimary:
+    "flex items-center justify-center w-full mt-10 rounded-lg text-white font-semibold bg-primary h-12 button-primary"
 }
 
 export const editorOptions = (field: any, theme: any) => ({
@@ -135,5 +137,8 @@ export const editorOptions = (field: any, theme: any) => ({
       "h1 h2 h3 h4 h5 h6 | preview | fullscreen |" +
       "link",
     content_style: `@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');body { font-family: Manrope,Helvetica,Arial,sans-serif; font-size:14px; line-height: 2; padding-bottom: 32px; } img { max-width: 100%; height: auto; display: block; margin: 0 auto; };`,
+
   },
 });
+
+export const lastLessonKey = "lastLesson"

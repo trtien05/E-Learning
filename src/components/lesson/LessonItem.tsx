@@ -36,7 +36,7 @@ const LessonItem = ({
   }
   return (
     <div className={cn('flex items-center gap-2 bgDarkMode border borderDarkMode rounded-lg p-4 text-sm font-medium',
-      isActive ? "text-primary font-semibold " : ""
+      isActive ? "font-bold " : ""
     )}>
       {url &&
         <Checkbox

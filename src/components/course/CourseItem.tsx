@@ -1,4 +1,5 @@
 import { IconClock, IconEye, IconStar } from '@/components/icons'
+import { commonClassName } from '@/constants'
 import { ICourse } from '@/database/course.model'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -21,7 +22,7 @@ const CourseItem = ({ data, cta, url }: { data: ICourse, cta?: string, url?: str
   ]
   const courseUrl = url ? url : `/course/${data.slug}`;
   return (
-    <div className='bg-white border dark:bg-grayDarker dark:border-opacity-10 border-gray-200 p-4 rounded-2xl'>
+    <div className='bg-white border dark:bg-grayDarker dark:border-opacity-10 border-gray-200 p-4 rounded-2xl flex flex-col'>
       <Link href={courseUrl} className='block h-[180px] relative'>
         <Image
           alt='course_image'
@@ -36,24 +37,26 @@ const CourseItem = ({ data, cta, url }: { data: ICourse, cta?: string, url?: str
           New
         </span>
       </Link>
-      <div className="pt-4">
+      <div className="pt-4 flex flex-col flex-1">
         <h3 className='font-bold mb-3 text-base'>
           {data.title}
         </h3>
-        <div className="flex items-center gap-3 mb-5 text-xs text-gray-500 dark:text-grayDark">
-          {courseInfo.map((item, index) => (
-            <div className="flex items-center gap-1" key={index}>
-              {item.icon('size-4')}
-              <span>{item.title}</span>
-            </div>
-          ))}
-          <span className='font-bold text-primary ml-auto text-base'>
-            {data.price.toLocaleString()}đ
-          </span>
+        <div className='mt-auto'>
+          <div className="flex items-center gap-3 mb-5 text-xs text-gray-500 dark:text-grayDark">
+            {courseInfo.map((item, index) => (
+              <div className="flex items-center gap-1" key={index}>
+                {item.icon('size-4')}
+                <span>{item.title}</span>
+              </div>
+            ))}
+            <span className='font-bold text-primary ml-auto text-base'>
+              {data.price.toLocaleString()}đ
+            </span>
+          </div>
         </div>
         <Link
           href={courseUrl}
-          className='flex items-center justify-center w-full mt-10 rounded-lg text-white bg-primary font-semibold h-12'
+          className={commonClassName.btnPrimary}
         >
           {cta || "Xem chi tiết"}
         </Link>

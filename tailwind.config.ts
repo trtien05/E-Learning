@@ -13,7 +13,7 @@ const config: Config = {
 			},
 			colors: {
 				primary: "#8873EF",
-				secondary: "#4E06FE",
+				secondary: "#2979ff",
 				grayDarkest: '#131316',
 				grayDarker: '#212126',
 				grayDark: '#9394A1'
