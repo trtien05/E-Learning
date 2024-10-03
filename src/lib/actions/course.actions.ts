@@ -10,21 +10,22 @@ import { revalidatePath } from "next/cache";
 export async function getCourseBySlug({ slug }: { slug: string }): Promise<TCourseUpdateParams | undefined> {
   try {
     connectToDatabase();
-    const findCourse = await Course.findOne({ slug }).populate({
-      path: 'lectures',
-      model: Lecture,
-      select: '_id title',
-      match: {
-        _destroy: false
-      },
-      populate: {
-        path: 'lessons',
-        model: Lesson,
+    const findCourse = await Course.findOne({ slug })
+      .populate({
+        path: 'lectures',
+        model: Lecture,
+        select: '_id title',
         match: {
           _destroy: false
         },
-      }
-    });
+        populate: {
+          path: 'lessons',
+          model: Lesson,
+          match: {
+            _destroy: false
+          },
+        }
+      });
     return findCourse;
   } catch (error) {
     console.log(error)

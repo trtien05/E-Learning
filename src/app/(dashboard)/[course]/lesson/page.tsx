@@ -5,7 +5,7 @@ import { Heading } from '@/components/common'
 import LessonContent from '@/components/lesson/LessonContent'
 import { getCourseBySlug } from '@/lib/actions/course.actions'
 import { getHistories } from '@/lib/actions/history.actions'
-import { findAllLessons, getLessonBySlug } from '@/lib/actions/lesson.actions'
+import { findAllLessons } from '@/lib/actions/lesson.actions'
 import { getUserInfo } from '@/lib/actions/user.actions'
 import { auth } from '@clerk/nextjs/server'
 import React from 'react'
@@ -30,22 +30,18 @@ const page = async ({ searchParams, params }:
   const findCourse = await getCourseBySlug({ slug: course });
   if (!findCourse) return null;
   const courseId = findCourse?._id.toString();
-  const lessonDetails = await getLessonBySlug({
-    slug: slug,
-    course: courseId || ""
-  })
+  const listLesson = await findAllLessons({ course: courseId || "" });
+  const lessonDetails = listLesson?.find((el) => el.slug === slug);
   if (!lessonDetails) return null;
   const videoId = lessonDetails.video_url?.split('v=').at(-1);
-  const listLesson = await findAllLessons({ course: courseId || "" });
-  const currentLesson = listLesson?.findIndex((el) => el.slug === lessonDetails.slug) || 0;
-  const prevLesson = listLesson?.[currentLesson - 1];
-  const nextLesson = listLesson?.[currentLesson + 1];
+  const currentLessonIndex = listLesson?.findIndex((el) => el.slug === slug) || 0;
+  const prevLesson = listLesson?.[currentLessonIndex - 1];
+  const nextLesson = listLesson?.[currentLessonIndex + 1];
   const lectures = findCourse?.lectures;
   const histories = await getHistories({ course: courseId })
   const completePercentage = ((histories?.length || 0) / (listLesson?.length || 1)) * 100;
   if (
     !findUser.courses.includes(courseId as any)
-    // || findUser.role !== EUserRole.ADMIN
   )
     return <PageNotFound />
 
