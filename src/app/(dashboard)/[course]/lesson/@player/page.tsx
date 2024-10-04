@@ -2,28 +2,21 @@ import LessonNavigation from '@/app/(dashboard)/[course]/lesson/LessonNavigation
 import LessonSaveUrl from '@/app/(dashboard)/[course]/lesson/LessonSaveUrl'
 import PageNotFound from '@/app/not-found'
 import { Heading } from '@/components/common'
-import LessonContent from '@/components/lesson/LessonContent'
 import { getCourseBySlug } from '@/lib/actions/course.actions'
-import { getHistories } from '@/lib/actions/history.actions'
 import { findAllLessons } from '@/lib/actions/lesson.actions'
-import { getUserInfo } from '@/lib/actions/user.actions'
-import { auth } from '@clerk/nextjs/server'
 import React from 'react'
 
-const page = async ({ searchParams, params }:
-  {
-    params: {
-      course: string
-    },
-    searchParams: {
-      slug: string
-    }
+const page = async ({
+  searchParams,
+  params
+}: {
+  params: {
+    course: string
+  },
+  searchParams: {
+    slug: string
   }
-) => {
-  const { userId } = auth();
-  if (!userId) return <PageNotFound />
-  const findUser = await getUserInfo({ userId });
-  if (!findUser) return <PageNotFound />
+}) => {
   const course = params.course;
   const slug = searchParams.slug;
   if (!course || !slug) return <PageNotFound />
@@ -37,16 +30,8 @@ const page = async ({ searchParams, params }:
   const currentLessonIndex = listLesson?.findIndex((el) => el.slug === slug) || 0;
   const prevLesson = listLesson?.[currentLessonIndex - 1];
   const nextLesson = listLesson?.[currentLessonIndex + 1];
-  const lectures = findCourse?.lectures;
-  const histories = await getHistories({ course: courseId })
-  const completePercentage = ((histories?.length || 0) / (listLesson?.length || 1)) * 100;
-  if (
-    !findUser.courses.includes(courseId as any)
-  )
-    return <PageNotFound />
-
   return (
-    <div className='block xl:grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start'>
+    <div className='mb-5'>
       <LessonSaveUrl course={course} url={`${course}/lesson?slug=${slug}`} />
       <div>
         <div className='relative aspect-video mb-5'>
@@ -69,22 +54,6 @@ const page = async ({ searchParams, params }:
             dangerouslySetInnerHTML={{ __html: lessonDetails.content || "" }}
           ></div>
         </div>
-      </div>
-
-      <div className="sticky top-5 right-0 max-h-[calc(100svh-100px)] overflow-y-auto">
-        <div className='w-full rounded-full bgDarkMode border borderDarkMode mb-2 h-3'>
-          <div className='bg-gradient-to-r from-primary to-secondary h-full rounded-full transition-all duration-300'
-            style={{
-              width: `${completePercentage}%`
-            }}
-          ></div>
-        </div>
-        <LessonContent
-          lectures={lectures}
-          course={course}
-          slug={slug}
-          histories={histories ? JSON.parse(JSON.stringify(histories)) : []}
-        />
       </div>
     </div>
   )

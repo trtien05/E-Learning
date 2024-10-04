@@ -50,7 +50,7 @@
   }
 
   .skeleton {
-    @apply bg-gray-300 border borderDarkMode;
+    @apply bg-gray-300 dark:bg-grayDarker animate-pulse;
   }
 }
 
