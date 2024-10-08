@@ -1,5 +1,6 @@
 import LoadingOutline from '@/app/(dashboard)/[course]/lesson/@outline/LoadingOutline';
 import LoadingPlayer from '@/app/(dashboard)/[course]/lesson/@player/LoadingPlayer';
+import LessonWrapper from '@/app/(dashboard)/[course]/lesson/LessonWrapper';
 import PageNotFound from '@/app/not-found';
 import { getUserInfo } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs/server';
@@ -19,10 +20,10 @@ const Layout = async ({
   if (!findUser) return <PageNotFound />
 
   return (
-    <div className='block xl:grid xl:grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-10 min-h-screen items-start'>
+    <LessonWrapper>
       <Suspense fallback={<LoadingPlayer />}>{player}</Suspense>
       <Suspense fallback={<LoadingOutline />}>{outline}</Suspense>
-    </div>
+    </LessonWrapper>
   )
 }
 

@@ -1,3 +1,4 @@
+import VideoPlayer from '@/app/(dashboard)/[course]/lesson/@player/VideoPlayer'
 import LessonNavigation from '@/app/(dashboard)/[course]/lesson/LessonNavigation'
 import LessonSaveUrl from '@/app/(dashboard)/[course]/lesson/LessonSaveUrl'
 import PageNotFound from '@/app/not-found'
@@ -34,20 +35,21 @@ const page = async ({
     <div className='mb-5'>
       <LessonSaveUrl course={course} url={`${course}/lesson?slug=${slug}`} />
       <div>
-        <div className='relative aspect-video mb-5'>
+        {/* <div className='relative aspect-video mb-5'>
           <iframe
             src={`https://www.youtube.com/embed/${videoId}`}
             className='w-full h-full object-fill'
           ></iframe>
-        </div>
-        <div className="flex items-center justify-between mb-5">
-          <LessonNavigation
-            prevLesson={!prevLesson ? "" : `/${course}/lesson?slug=${prevLesson?.slug}`}
-            nextLesson={!nextLesson ? "" : `/${course}/lesson?slug=${nextLesson?.slug}`}
-          >
-          </LessonNavigation>
-          <div></div>
-        </div>
+          
+        </div> */}
+        <VideoPlayer
+          nextLesson={
+            !nextLesson ? "" : `/${course}/lesson?slug=${nextLesson?.slug}`
+          }
+          prevLesson={
+            !prevLesson ? "" : `/${course}/lesson?slug=${prevLesson?.slug}`
+          }
+        />
         <Heading className='mb-10'>{lessonDetails.title}</Heading>
         <div className="p-5 rounded-lg bgDarkMode border borderDarkMode entry-content">
           <div
