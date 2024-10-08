@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "EduVerse",
@@ -29,6 +30,7 @@ export default function RootLayout({
           >
             {children}
             <SpeedInsights />
+            <Analytics />
             <ToastContainer
               autoClose={2000}
               bodyClassName="text-sm font-medium"

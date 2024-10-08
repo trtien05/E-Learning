@@ -7,7 +7,7 @@ const page = async () => {
   return (
     <>
       <Heading>Khu vực học tập</Heading>
-      <StudyCourses courses={courses ? JSON.parse(JSON.stringify(courses) || "[]") : []} />
+      <StudyCourses courses={courses ? JSON.parse(JSON.stringify(courses)) : []} />
     </>
   )
 }
