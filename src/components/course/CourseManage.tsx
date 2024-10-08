@@ -1,9 +1,8 @@
 'use client'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -13,7 +12,7 @@ import { Heading } from '@/components/common'
 import Image from 'next/image'
 import { commonClassName, courseStatus } from '@/constants'
 import { cn } from '@/lib/utils'
-import { IconDelete, IconEdit, IconEye, IconStudy } from '@/components/icons'
+import { IconDelete, IconEdit, IconEye, IconLeftArrow, IconRightArrow, IconStudy } from '@/components/icons'
 import Link from 'next/link'
 import { ICourse } from '@/database/course.model'
 import Swal from 'sweetalert2'
@@ -21,8 +20,34 @@ import { updateCourse } from '@/lib/actions/course.actions'
 import { ECourseStatus } from '@/types/enum'
 import { toast } from "react-toastify";
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { debounce } from 'lodash'
+import page from './../../app/explore/page';
 
 const CourseManage = ({ courses }: { courses: ICourse[] }) => {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const [page, setPage] = useState(1);
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+
+      return params.toString()
+    },
+    [searchParams]
+  )
+
   const handleDeleteCourse = async (slug: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -78,6 +103,23 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
     }
   }
 
+  const handleSelectStatus = (status: ECourseStatus) => {
+    router.push(`${pathname}?${createQueryString('status', status)}`)
+  }
+
+  const handleSearchCoure = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+    router.push(`${pathname}?${createQueryString('search', e.target.value)}`)
+    setPage(1);
+  }, 500)
+
+  const handleChangePage = (type: "prev" | "next") => {
+    if (type === "prev" && page === 1) return;
+    if (type === "prev") setPage(prev => prev - 1);
+    if (type === "next") setPage(prev => prev + 1);
+  }
+  useEffect(() => {
+    router.push(`${pathname}?${createQueryString('page', page.toString())}`)
+  }, [page]);
   return (
     <div>
       <Link href={'/manage/course/new'} className='bg-primary text-white fixed flexCenter rounded-full animate-bounce right-5 bottom-5 size-10'>
@@ -87,8 +129,22 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
       </Link>
       <div className='flex flex-col lg:flex-row lg:items-center gap-5 justify-between mb-10'>
         <Heading >Quản lý khóa học</Heading>
-        <div className="w-full lg:w-[300px]">
-          <Input placeholder='Tìm kiếm khóa học ...' />
+        <div className='flex gap-3'>
+          <div className="w-full lg:w-[300px]">
+            <Input placeholder='Tìm kiếm khóa học ...' onChange={(e) => handleSearchCoure(e)} />
+          </div>
+          <Select onValueChange={handleSelectStatus}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Chọn trạng thái" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {courseStatus.map(status => (
+                  <SelectItem key={status.value} value={status.value}>{status.title}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <Table className='table-responsive'>
@@ -170,28 +226,23 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
         </TableBody>
       </Table>
       <div className='flex justify-end gap-3 mt-5'>
-        <button className={commonClassName.paginationButton}>
-          {IconArrowLeft}
+        <button
+          className={commonClassName.paginationButton}
+          onClick={() => handleChangePage("prev")}
+        >
+          <IconLeftArrow />
         </button>
-        <button className={commonClassName.paginationButton}>
-          {IconArrowRight}
+        <button
+          className={commonClassName.paginationButton}
+          onClick={() => handleChangePage("next")}
+        >
+          <IconRightArrow />
         </button>
       </div>
     </div>
 
   )
 }
-const IconArrowLeft = (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-  </svg>
-)
-
-const IconArrowRight = (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-  </svg>
-)
 
 
 export default CourseManage

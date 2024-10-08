@@ -3,8 +3,9 @@ import Course, { ICourse } from "@/database/course.model";
 import Lecture from "@/database/lecture.model";
 import Lesson from "@/database/lesson.model";
 import { connectToDatabase } from "@/lib/mongoose";
-import { TCourseUpdateParams, TCreateCourseParams, TUpdateCoureParams } from "@/types";
+import { TCourseUpdateParams, TCreateCourseParams, TGetAllCourseParams, TUpdateCoureParams } from "@/types";
 import { revalidatePath } from "next/cache";
+import { FilterQuery } from "mongoose";
 
 //Fetching
 export async function getCourseBySlug({ slug }: { slug: string }): Promise<TCourseUpdateParams | undefined> {
@@ -32,16 +33,28 @@ export async function getCourseBySlug({ slug }: { slug: string }): Promise<TCour
   }
 }
 
-export async function getAllCourses(): Promise<ICourse[] | undefined> {
+export async function getAllCourses(params: TGetAllCourseParams): Promise<ICourse[] | undefined> {
   try {
     connectToDatabase();
-    const courses = await Course.find();
+    const { page = 1, limit = 10, search, status } = params;
+    const skip = (page - 1) * limit;
+    const query: FilterQuery<typeof Course> = {};
+    if (search) {
+      (query as any).$or = [{ title: { $regex: search, $options: "i" } }];
+    }
+    if (status) {
+      (query as any).status = status;
+    }
+    const courses = await Course.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ created_at: -1 });
+
     return courses;
   } catch (error) {
     console.log(error)
   }
 }
-
 //CRUD
 export async function createCourse(params: TCreateCourseParams) {
   try {
