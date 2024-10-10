@@ -30,7 +30,6 @@ import {
 } from "@/components/ui/select"
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { debounce } from 'lodash'
-import page from './../../app/explore/page';
 
 const CourseManage = ({ courses }: { courses: ICourse[] }) => {
   const router = useRouter()
@@ -76,13 +75,10 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
   const handleChangeStatus = async (slug: string, status: ECourseStatus) => {
     try {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
+        title: "Bạn có chắc muốn đổi trạng thái không?",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, update it!",
+        confirmButtonText: "Cập nhật",
+        cancelButtonText: "Hủy",
       }).then(async (result) => {
         if (result.isConfirmed) {
           await updateCourse({
@@ -96,6 +92,12 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
             path: "/manage/course",
           });
           toast.success("Cập nhật trạng thái thành công!");
+          router.push(
+            `${pathname}?${createQueryString("status", "")}&${createQueryString(
+              "search",
+              ""
+            )}`
+          );
         }
       });
     } catch (error) {

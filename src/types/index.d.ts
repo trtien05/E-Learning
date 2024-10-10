@@ -46,8 +46,8 @@ export interface TCourseUpdateParams extends Omit<ICourse, 'lectures'> {
 }
 
 export type TGetAllCourseParams = {
-    page: number;
-    limit: number;
+    page?: number;
+    limit?: number;
     search?: string;
     status?: string;
 }
