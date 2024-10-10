@@ -14,6 +14,9 @@ import {
 } from "@/components/ui/accordion"
 
 import LessonContent from '@/components/lesson/LessonContent'
+import ButtonEnroll from '@/app/(dashboard)/course/[slug]/ButtonEnroll'
+import { auth } from '@clerk/nextjs/server'
+import { getUserInfo } from '@/lib/actions/user.actions'
 
 const page = async ({
   params
@@ -23,9 +26,10 @@ const page = async ({
   }
 }) => {
   const data = await getCourseBySlug({ slug: params.slug })
-  if (!data) {
-    return null
-  }
+  if (!data) return null;
+  const { userId } = auth();
+  if (!userId) return null;
+  const findUser = await getUserInfo({ userId: userId });
   const lectures = data.lectures || [];
   if (data.status !== ECourseStatus.APPROVED) return <PageNotFound />
   const videoId = data?.intro_url.split('v=')[1];
@@ -168,7 +172,12 @@ const page = async ({
               <span>Tài liệu kèm theo</span>
             </li>
           </ul>
-          <Button variant='primary' className='w-full'>Mua Khóa Học</Button>
+          <ButtonEnroll
+            user={findUser ? JSON.parse(JSON.stringify(findUser)) : null}
+            courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
+            amount={data.price}
+          >
+          </ButtonEnroll>
         </div>
       </div>
     </div>
