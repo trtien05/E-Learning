@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Table,
   TableBody,
@@ -8,10 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Heading } from '@/components/common'
+import { Heading, StatusBadge } from '@/components/common'
 import Image from 'next/image'
 import { commonClassName, courseStatus } from '@/constants'
-import { cn } from '@/lib/utils'
 import { IconDelete, IconEdit, IconEye, IconLeftArrow, IconRightArrow, IconStudy } from '@/components/icons'
 import Link from 'next/link'
 import { ICourse } from '@/database/course.model'
@@ -28,24 +27,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { debounce } from 'lodash'
+import { useQueryString } from '@/components/hooks/useQueryString'
 
 const CourseManage = ({ courses }: { courses: ICourse[] }) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const { createQueryString, router, pathname } = useQueryString();
   const [page, setPage] = useState(1);
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(name, value)
-
-      return params.toString()
-    },
-    [searchParams]
-  )
 
   const handleDeleteCourse = async (slug: string) => {
     Swal.fire({
@@ -109,7 +96,7 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
     router.push(`${pathname}?${createQueryString('status', status)}`)
   }
 
-  const handleSearchCoure = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchCourse = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
     router.push(`${pathname}?${createQueryString('search', e.target.value)}`)
     setPage(1);
   }, 500)
@@ -119,9 +106,11 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
     if (type === "prev") setPage(prev => prev - 1);
     if (type === "next") setPage(prev => prev + 1);
   }
+
   useEffect(() => {
     router.push(`${pathname}?${createQueryString('page', page.toString())}`)
   }, [page]);
+
   return (
     <div>
       <Link href={'/manage/course/new'} className='bg-primary text-white fixed flexCenter rounded-full animate-bounce right-5 bottom-5 size-10'>
@@ -133,7 +122,7 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
         <Heading >Quản lý khóa học</Heading>
         <div className='flex gap-3'>
           <div className="w-full lg:w-[300px]">
-            <Input placeholder='Tìm kiếm khóa học ...' onChange={(e) => handleSearchCoure(e)} />
+            <Input placeholder='Tìm kiếm khóa học ...' onChange={(e) => handleSearchCourse(e)} />
           </div>
           <Select onValueChange={handleSelectStatus}>
             <SelectTrigger className="w-[180px]">
@@ -188,12 +177,8 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <button type='button'
-                    className={cn(commonClassName.status, courseStatusItem?.className)}
-                    onClick={() => handleChangeStatus(course.slug, course.status)}
-                  >
-                    {courseStatusItem?.title}
-                  </button>
+                  <StatusBadge item={courseStatusItem}
+                    onClick={() => handleChangeStatus(course.slug, course.status)} />
                 </TableCell>
                 <TableCell>
                   <div className='flex gap-3'>

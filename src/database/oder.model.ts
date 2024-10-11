@@ -4,14 +4,14 @@ import { Document, Schema, model, models } from "mongoose";
 export interface IOrder extends Document {
   _id: string;
   code: string;
+  course: Schema.Types.ObjectId;
+  user: Schema.Types.ObjectId;
+  status: EOrderStatus;
+  created_at: Date;
   total: number;
   amount: number;
   discount: number;
-  course: Schema.Types.ObjectId;
-  created_at: Date;
-  user: Schema.Types.ObjectId;
-  status: EOrderStatus;
-  coupon: Schema.Types.ObjectId;
+  coupon?: Schema.Types.ObjectId;
 }
 const orderSchema = new Schema<IOrder>({
   code: {
@@ -29,29 +29,27 @@ const orderSchema = new Schema<IOrder>({
     type: Number,
     default: 0,
   },
-  status: {
-    type: String,
-    enum: Object.values(EOrderStatus),
-    default: EOrderStatus.PENDING,
-  },
   created_at: {
     type: Date,
     default: Date.now,
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
   },
   course: {
     type: Schema.Types.ObjectId,
     ref: "Course",
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   coupon: {
     type: Schema.Types.ObjectId,
     ref: "Coupon",
   },
-
+  status: {
+    type: String,
+    enum: Object.values(EOrderStatus),
+    default: EOrderStatus.PENDING,
+  },
 });
-
-const Order = models.Oder || model<IOrder>("Order", orderSchema);
+const Order = models.Order || model<IOrder>("Order", orderSchema);
 export default Order;
