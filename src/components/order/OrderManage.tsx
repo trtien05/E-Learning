@@ -25,7 +25,10 @@ import {
 } from "@/components/ui/select"
 import { useQueryString } from '@/components/hooks/useQueryString'
 import { debounce } from 'lodash'
+import { updateOrder } from '@/lib/actions/order.action'
+import { toast } from 'react-toastify'
 interface IOrderManageProps {
+  _id: string;
   code: string;
   total: number;
   amount: number;
@@ -45,19 +48,28 @@ const OrderManage = ({
 }) => {
   const { createQueryString, router, pathname } = useQueryString();
 
-  const handleCompleteOrder = () => { }
-  const handleCancelOrder = async () => {
+  const handleUpdateOrder = async ({ orderId, status }: { orderId: string, status: EOrderStatus }) => {
     try {
-      Swal.fire({
-        title: "Bạn có chắc muốn hủy đơn hàng không?",
-        showCancelButton: true,
-        confirmButtonText: "Đồng ý",
-        cancelButtonText: "Hủy",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-
+      if (status === EOrderStatus.CANCELED) {
+        Swal.fire({
+          title: "Bạn có chắc muốn hủy đơn hàng không?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Hủy luôn",
+          cancelButtonText: "Hủy",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            await updateOrder({ orderId, status })
+          }
+        });
+      }
+      if (status === EOrderStatus.COMPLETED) {
+        const res = await updateOrder({ orderId, status })
+        if (res?.success) {
+          toast.success("Cập nhật đơn hàng thành công");
         }
-      });
+      }
+
     } catch (error) {
       console.log(error);
     }
@@ -111,7 +123,6 @@ const OrderManage = ({
                 <TableCell>{order.course.title}</TableCell>
                 <TableCell>{order.user.name}</TableCell>
                 <TableCell>
-
                   <div className='flex flex-col gap-2'>
                     <span>{order.amount.toLocaleString()}</span>
                     {order.discount > 0 && (
@@ -130,22 +141,32 @@ const OrderManage = ({
                 <TableCell></TableCell>
                 <TableCell><StatusBadge item={orderStatusItem} /></TableCell>
                 <TableCell>
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      className='border-[2px] p-2 rounded-md'
-                      onClick={handleCompleteOrder}
-                    >
-                      <IconCheck className='size-4' />
-                    </button>
-                    <button
-                      type="button"
-                      className='border-[2px] p-2 rounded-md'
-                      onClick={handleCancelOrder}
-                    >
-                      <IconCancel className='size-4' />
-                    </button>
-                  </div>
+                  {order.status !== EOrderStatus.CANCELED && (
+                    <div className="flex gap-3">
+                      {order.status !== EOrderStatus.COMPLETED && (
+                        <button
+                          type="button"
+                          className='border-[2px] p-2 rounded-md'
+                          onClick={() => handleUpdateOrder({
+                            status: EOrderStatus.COMPLETED,
+                            orderId: order._id
+                          })}
+                        >
+                          <IconCheck className='size-4' />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className='border-[2px] p-2 rounded-md'
+                        onClick={() => handleUpdateOrder({
+                          status: EOrderStatus.CANCELED,
+                          orderId: order._id
+                        })}
+                      >
+                        <IconCancel className='size-4' />
+                      </button>
+                    </div>
+                  )}
                 </TableCell>
               </TableRow>
             )
