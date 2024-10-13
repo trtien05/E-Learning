@@ -29,24 +29,36 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { CalendarIcon } from "lucide-react";
+import { useState } from "react";
+import { ECouponType } from "@/types/enum";
+import { couponTypes } from "@/constants";
 const formSchema = z.object({
-  title: z.string(),
-  code: z.string(),
-  startDate: z.string(),
-  endDate: z.string(),
-  status: z.boolean(),
-  value: z.string(),
-  type: z.string(),
-  courses: z.array(z.string()),
-  limit: z.string(),
+  title: z.string({
+    message: "Tiêu đề không được để trống",
+  }),
+  code: z
+    .string({
+      message: "Mã giảm giá không được để trống"
+    })
+    .min(3, "Mã giảm giá phải lớn hơn 3 ký tự")
+    .max(10, "Mã giảm giá phải nhỏ hơn 10 ký tự"),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  active: z.boolean().optional(),
+  value: z.number().optional(),
+  type: z.string().optional(),
+  courses: z.array(z.string()).optional(),
+  limit: z.number().optional(),
 });
 const NewCouponForm = () => {
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-    },
+    defaultValues: {},
   });
+  const couponTypeWatch = form.watch("type");
+
   async function onSubmit(values: z.infer<typeof formSchema>) { }
   return (
     <Form {...form}>
@@ -54,7 +66,7 @@ const NewCouponForm = () => {
         <div className="grid grid-cols-2 gap-8 mt-10 mb-8">
           <FormField
             control={form.control}
-            name="title"
+            name="code"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tiêu đề</FormLabel>
@@ -93,7 +105,12 @@ const NewCouponForm = () => {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" initialFocus />
+                      <Calendar
+                        mode="single"
+                        initialFocus
+                        selected={startDate}
+                        onSelect={setStartDate}
+                      />
                     </PopoverContent>
                   </Popover>
                 </FormControl>
@@ -116,7 +133,12 @@ const NewCouponForm = () => {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" initialFocus />
+                      <Calendar
+                        mode="single"
+                        initialFocus
+                        selected={endDate}
+                        onSelect={setEndDate}
+                      />
                     </PopoverContent>
                   </Popover>
                 </FormControl>
@@ -131,15 +153,20 @@ const NewCouponForm = () => {
               <FormItem>
                 <FormLabel>Loại coupon</FormLabel>
                 <FormControl>
-                  <RadioGroup defaultValue="percentage" className="flex gap-5">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="percentage" id="percentage" />
-                      <Label htmlFor="percentage">Phần trăm</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="money" id="money" />
-                      <Label htmlFor="money">Giá tiền</Label>
-                    </div>
+                  <RadioGroup
+                    defaultValue={ECouponType.PERCENT}
+                    className="flex gap-5"
+                    onValueChange={field.onChange}
+                  >
+                    {couponTypes.map((type) => (
+                      <div
+                        className="flex items-center space-x-2"
+                        key={type.value}
+                      >
+                        <RadioGroupItem value={type.value} id={type.value} />
+                        <Label htmlFor={type.value}>{type.title}</Label>
+                      </div>
+                    ))}
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
@@ -153,7 +180,12 @@ const NewCouponForm = () => {
               <FormItem>
                 <FormLabel>Giá trị</FormLabel>
                 <FormControl>
-                  <Input placeholder="" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="50%"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -161,7 +193,7 @@ const NewCouponForm = () => {
           />
           <FormField
             control={form.control}
-            name="status"
+            name="active"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Trạng thái</FormLabel>
@@ -184,7 +216,12 @@ const NewCouponForm = () => {
               <FormItem>
                 <FormLabel>Số lượng tối đa</FormLabel>
                 <FormControl>
-                  <Input placeholder="" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="100"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -197,14 +234,7 @@ const NewCouponForm = () => {
               <FormItem>
                 <FormLabel>Khóa học</FormLabel>
                 <FormControl>
-                  <Select>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Chọn khóa học" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup></SelectGroup>
-                    </SelectContent>
-                  </Select>
+                  <Input placeholder="Tìm kiếm khóa học..." />
                 </FormControl>
                 <FormMessage />
               </FormItem>

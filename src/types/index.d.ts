@@ -44,7 +44,13 @@ export type TUpdateCourseLecture = {
 export interface TCourseUpdateParams extends Omit<ICourse, 'lectures'> {
     lectures: TUpdateCourseLecture[];
 }
-
+export interface StudyCoursesProps extends Omit<ICourse, "lectures"> {
+    lectures: {
+        lessons: {
+            slug: string;
+        }[];
+    }[];
+}
 export type TGetAllCourseParams = {
     page?: number;
     limit?: number;

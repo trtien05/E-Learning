@@ -17,6 +17,8 @@ import LessonContent from '@/components/lesson/LessonContent'
 import ButtonEnroll from '@/app/(dashboard)/course/[slug]/ButtonEnroll'
 import { auth } from '@clerk/nextjs/server'
 import { getUserInfo } from '@/lib/actions/user.actions'
+import AlreadyEnroll from '@/app/(dashboard)/course/[slug]/AlreadyEnroll'
+import CourseWidget from '@/app/(dashboard)/course/[slug]/CourseWidget'
 
 const page = async ({
   params
@@ -30,6 +32,7 @@ const page = async ({
   const { userId } = auth();
   if (!userId) return null;
   const findUser = await getUserInfo({ userId: userId });
+  const userCourses = findUser?.courses.map((course: any) => course.toString())
   const lectures = data.lectures || [];
   if (data.status !== ECourseStatus.APPROVED) return <PageNotFound />
   const videoId = data?.intro_url.split('v=')[1];
@@ -141,44 +144,13 @@ const page = async ({
 
       </div>
       <div>
-        <div className="bgDarkMode border borderDarkMode rounded-lg p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <strong className="text-primary font-bold text-xl">
-              {data.price.toLocaleString()}đ
-            </strong>
-            <span className="text-slate-500 line-through">
-              {data.sale_price.toLocaleString()}đ
-            </span>
-            <span className='bg-primary text-primary bg-opacity-10 px-3 py-1 rounded-lg ml-auto inline-block font-semibold text-sm'>
-              {Math.floor((data.price / data.sale_price) * 100)}%
-            </span>
-          </div>
-          <h3 className='font-bold mb-3'>Khóa học gồm có:</h3>
-          <ul className='flex flex-col gap-3 text-sm mb-3 text-slate-500'>
-            <li className='flex items-center gap-2'>
-              <IconPlay className='size-4' />
-              <span>30h học</span>
-            </li>
-            <li className='flex items-center gap-2'>
-              <IconPlay className='size-4' />
-              <span>Video Full HD</span>
-            </li>
-            <li className='flex items-center gap-2'>
-              <IconUser className='size-4' />
-              <span>Có nhóm hổ trợ</span>
-            </li>
-            <li className='flex items-center gap-2'>
-              <IconStudy className='size-4' />
-              <span>Tài liệu kèm theo</span>
-            </li>
-          </ul>
-          <ButtonEnroll
-            user={findUser ? JSON.parse(JSON.stringify(findUser)) : null}
-            courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
-            amount={data.price}
-          >
-          </ButtonEnroll>
-        </div>
+        {userCourses?.includes(data._id.toString()) ? (
+          <AlreadyEnroll />
+        ) : (
+          <CourseWidget
+            data={data ? JSON.parse(JSON.stringify(data)) : null}
+            findUser={findUser ? JSON.parse(JSON.stringify(findUser)) : null} />
+        )}
       </div>
     </div>
   )

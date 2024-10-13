@@ -8,7 +8,7 @@ import {
   IconComment,
   IconCoupon
 } from '@/components/icons/index'
-import { ECourseLevel, ECourseStatus, EOrderStatus } from '@/types/enum'
+import { ECouponType, ECourseLevel, ECourseStatus, EOrderStatus } from '@/types/enum'
 
 export const menuItems: {
   url: string,
@@ -115,7 +115,19 @@ export const courseLevel: {
       value: ECourseLevel.ADVANCED,
     },
   ]
-
+export const couponTypes: {
+  title: string;
+  value: ECouponType;
+}[] = [
+    {
+      title: "Phần trăm",
+      value: ECouponType.PERCENT,
+    },
+    {
+      title: "Giá trị",
+      value: ECouponType.AMOUNT,
+    },
+  ];
 export const courseLevelTitle: Record<ECourseLevel, string> = {
   [ECourseLevel.BEGINNER]: "Dễ",
   [ECourseLevel.INTERMEDIATE]: "Trung bình",
