@@ -57,5 +57,6 @@ const couponSchema = new Schema<ICoupon>({
   },
 });
 
-const Coupon = models.Coupon || model<ICoupon>("Coupon", couponSchema);
+const Coupon =
+  models.Coupon || model<ICoupon>("Coupon", couponSchema);
 export default Coupon;
