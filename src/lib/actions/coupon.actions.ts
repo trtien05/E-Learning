@@ -2,6 +2,7 @@
 
 import Coupon, { ICoupon } from "@/database/coupon.model";
 import { connectToDatabase } from "../mongoose";
+import { revalidatePath } from "next/cache";
 
 export async function createCoupon(params: any) {
   try {
@@ -18,7 +19,17 @@ export async function getCoupons(
   try {
     connectToDatabase();
     const coupons = await Coupon.find(params);
+    revalidatePath("/manage/coupon");
     return JSON.parse(JSON.stringify(coupons));
+  } catch (error) {
+    console.log(error);
+  }
+}
+export async function deleteCoupon(code: string) {
+  try {
+    connectToDatabase();
+    await Coupon.findOneAndDelete({ code });
+    revalidatePath("/manage/coupon");
   } catch (error) {
     console.log(error);
   }

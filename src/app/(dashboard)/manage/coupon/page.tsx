@@ -15,6 +15,7 @@ import {
 import { commonClassName } from "@/constants";
 import { getCoupons } from "@/lib/actions/coupon.actions";
 import { ECouponType } from "@/types/enum";
+import ActionDeleteButton from "./ActionDeleteButton";
 const page = async () => {
   const coupons = await getCoupons({});
   return (
@@ -85,7 +86,7 @@ const page = async () => {
                       type="edit"
                       url={`/manage/coupon/update?code=${coupon.code}`}
                     />
-                    <TableActionItem type="delete" />
+                    <ActionDeleteButton code={coupon.code} />
                   </TableAction>
                 </TableCell>
               </TableRow>

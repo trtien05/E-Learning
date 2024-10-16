@@ -40,6 +40,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
+    "react-number-format": "^5.4.2",
     "react-toastify": "^10.0.5",
     "sass": "^1.78.0",
     "sharp": "^0.33.5",

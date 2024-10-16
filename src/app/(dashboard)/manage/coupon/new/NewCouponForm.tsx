@@ -37,6 +37,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { getAllCourses } from "@/lib/actions/course.actions";
 import { debounce } from "lodash";
 import { IconClose } from "@/components/icons";
+import InputFormatCurrency from "@/components/ui/input-format";
 const formSchema = z.object({
   title: z
     .string({
@@ -80,9 +81,20 @@ const NewCouponForm = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      const couponType = values.type;
+      if (
+        couponType === ECouponType.PERCENT &&
+        values.value &&
+        (values.value > 100 || values.value < 0)
+      ) {
+        form.setError("value", {
+          message: "Giá trị không hợp lệ",
+        });
+        return;
+      }
       const newCoupon = await createCoupon({
         ...values,
-        course: selectedCourses.map((course) => course._id),
+        courses: selectedCourses.map((course) => course._id),
       });
       if (newCoupon.code) {
         toast.success("Tạo mã giảm giá thành công");
@@ -144,8 +156,11 @@ const NewCouponForm = () => {
                 <FormControl>
                   <Input
                     placeholder="Mã giảm giá"
-                    className="font-bold"
+                    className="font-bold uppercase"
                     {...field}
+                    onChange={(e) =>
+                      field.onChange(e.target.value.toUpperCase())
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -164,7 +179,7 @@ const NewCouponForm = () => {
                       <Button variant={"outline"} className="w-full">
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {startDate ? (
-                          format(startDate, "PPP")
+                          format(startDate, "dd/MM/yyyy")
                         ) : (
                           <span>Pick a date</span>
                         )}
@@ -199,7 +214,7 @@ const NewCouponForm = () => {
                       <Button variant={"outline"} className="w-full">
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {endDate ? (
-                          format(endDate, "PPP")
+                          format(endDate, "dd/MM/yyyy")
                         ) : (
                           <span>Pick a date</span>
                         )}
@@ -264,14 +279,25 @@ const NewCouponForm = () => {
               <FormItem>
                 <FormLabel>Giá trị</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="50%"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(e.target.valueAsNumber)
-                    }
-                  />
+                  <>
+                    {couponTypeWatch === ECouponType.PERCENT ? (
+                      <Input
+                        type="number"
+                        placeholder="100"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(e.target.valueAsNumber)
+                        }
+                      />
+                    ) : (
+                      <InputFormatCurrency
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(e.target.value)
+                        }
+                      />
+                    )}
+                  </>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -325,15 +351,15 @@ const NewCouponForm = () => {
                   <>
                     <Input
                       placeholder="Tìm kiếm khóa học..."
-                      onChange={(e) => handleSearchCourse(e)}
+                      onChange={handleSearchCourse}
                     />
                     {findCourse && findCourse.length > 0 && (
-                      <div className="flex flex-cols gap-2 !mt-5">
-                        {findCourse.map((course) => (
+                      <div className="flex flex-col gap-2 !mt-5">
+                        {findCourse?.map((course) => (
                           <Label
                             key={course.title}
-                            htmlFor={course.title}
                             className="flex items-center gap-2 font-medium text-sm cursor-pointer"
+                            htmlFor={course.title}
                           >
                             <Checkbox
                               id={course.title}
@@ -349,27 +375,26 @@ const NewCouponForm = () => {
                         ))}
                       </div>
                     )}
-                    {selectedCourses &&
-                      selectedCourses.length > 0 && (
-                        <div className="flex items-start flex-wrap gap-2 !mt-5">
-                          {selectedCourses.map((course) => (
-                            <div
-                              key={course.title}
-                              className="inline-flex items-center gap-2 font-semibold text-sm px-3 py-1 rounded-lg border borderDarkMode bgDarkMode"
+                    {selectedCourses.length > 0 && (
+                      <div className="flex items-start flex-wrap gap-2 !mt-5">
+                        {selectedCourses?.map((course) => (
+                          <div
+                            key={course.title}
+                            className="inline-flex items-center gap-2 font-semibold text-sm px-3 py-1 rounded-lg border borderDarkMode bgDarkMode"
+                          >
+                            <span>{course.title}</span>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleSelectCourse(false, course)
+                              }
                             >
-                              <span>{course.title}</span>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleSelectCourse(false, course)
-                                }
-                              >
-                                <IconClose className="size-5 text-gray-400 hover:text-gray-600" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                              <IconClose className="size-5 text-gray-400 hover:text-gray-600" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </>
                 </FormControl>
                 <FormMessage />
@@ -377,7 +402,11 @@ const NewCouponForm = () => {
             )}
           />
         </div>
-        <Button variant="primary" className="w-[150px] ml-auto flex">
+        <Button
+          variant="primary"
+          type="submit"
+          className="w-[150px] ml-auto flex"
+        >
           Tạo mã
         </Button>
       </form>

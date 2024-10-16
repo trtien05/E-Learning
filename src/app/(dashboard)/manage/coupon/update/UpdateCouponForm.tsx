@@ -33,6 +33,7 @@ import { format } from "date-fns";
 import { createCoupon } from "@/lib/actions/coupon.actions";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
+import InputFormatCurrency from "@/components/ui/input-format";
 const formSchema = z.object({
   title: z.string({
     message: "Tiêu đề không được để trống",
@@ -212,14 +213,23 @@ const UpdateCouponForm = () => {
               <FormItem>
                 <FormLabel>Giá trị</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="50%"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(e.target.valueAsNumber)
-                    }
-                  />
+                  {couponTypeWatch === ECouponType.PERCENT ? (
+                    <Input
+                      type="number"
+                      placeholder="100%"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(e.target.valueAsNumber)
+                      }
+                    />
+                  ) : (
+                    <InputFormatCurrency
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(parseInt(e.target.value))
+                      }
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
