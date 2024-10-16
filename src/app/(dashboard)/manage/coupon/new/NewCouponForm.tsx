@@ -50,10 +50,10 @@ const formSchema = z.object({
     })
     .min(3, "Mã giảm giá phải lớn hơn 3 ký tự")
     .max(10, "Mã giảm giá phải nhỏ hơn 10 ký tự"),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
+  start_date: z.string().optional(),
+  end_date: z.string().optional(),
   active: z.boolean().optional(),
-  value: z.number().optional(),
+  value: z.string().optional(),
   type: z.string().optional(),
   courses: z.array(z.string()).optional(),
   limit: z.number().optional(),
@@ -68,12 +68,12 @@ const NewCouponForm = () => {
     defaultValues: {
       active: true,
       type: ECouponType.PERCENT,
-      value: 0,
+      value: "0",
       limit: 0,
       title: "",
       code: "",
-      startDate: "",
-      endDate: "",
+      start_date: "",
+      end_date: "",
       courses: [],
     },
   });
@@ -82,10 +82,11 @@ const NewCouponForm = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const couponType = values.type;
+      const couponValue = Number(values.value?.replace(/,/g, ""));
       if (
         couponType === ECouponType.PERCENT &&
         values.value &&
-        (values.value > 100 || values.value < 0)
+        (couponValue > 100 || couponValue < 0)
       ) {
         form.setError("value", {
           message: "Giá trị không hợp lệ",
@@ -94,6 +95,8 @@ const NewCouponForm = () => {
       }
       const newCoupon = await createCoupon({
         ...values,
+        start_date: startDate,
+        end_date: endDate,
         courses: selectedCourses.map((course) => course._id),
       });
       if (newCoupon.code) {
@@ -169,7 +172,7 @@ const NewCouponForm = () => {
           />
           <FormField
             control={form.control}
-            name="startDate"
+            name="start_date"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Ngày bắt đầu</FormLabel>
@@ -204,7 +207,7 @@ const NewCouponForm = () => {
           />
           <FormField
             control={form.control}
-            name="endDate"
+            name="end_date"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Ngày kết thúc</FormLabel>
@@ -282,11 +285,10 @@ const NewCouponForm = () => {
                   <>
                     {couponTypeWatch === ECouponType.PERCENT ? (
                       <Input
-                        type="number"
                         placeholder="100"
                         {...field}
                         onChange={(e) =>
-                          field.onChange(e.target.valueAsNumber)
+                          field.onChange(e.target.value)
                         }
                       />
                     ) : (
