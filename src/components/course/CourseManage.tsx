@@ -36,6 +36,8 @@ import {
 } from "@/components/ui/select";
 import { debounce } from "lodash";
 import { useQueryString } from "@/components/hooks/useQueryString";
+import TableAction from "../common/TableAction";
+import TableActionItem from "../common/TableActionItem";
 
 const CourseManage = ({ courses }: { courses: ICourse[] }) => {
   const { createQueryString, router, pathname } = useQueryString();
@@ -226,35 +228,27 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <div className="flex gap-3">
-                      <Link
-                        href={`/manage/course/update-content?slug=${course.slug}`}
-                        className="border-[2px] p-2 rounded-md"
-                      >
-                        <IconStudy className="size-5" />
-                      </Link>
-                      <Link
-                        href={`/course/${course.slug}`}
-                        target="_blank"
-                        className="border-[2px] p-2 rounded-md"
-                      >
-                        <IconEye className="size-5" />
-                      </Link>
-                      <Link
-                        href={`/manage/course/update?slug=${course.slug}`}
-                        className="border-[2px] p-2 rounded-md"
-                      >
-                        <IconEdit className="size-5" />
-                      </Link>
-                      <button
-                        className="border-[2px] p-2 rounded-md"
+                    <TableAction>
+                      <TableActionItem
+                        type="study"
+                        url={`/manage/course/update-content?slug=${course.slug}`}
+                      />
+                      <TableActionItem
+                        type="view"
+                        url={`/course/${course.slug}`}
+                      />
+
+                      <TableActionItem
+                        type="edit"
+                        url={`/manage/course/update?slug=${course.slug}`}
+                      />
+                      <TableActionItem
+                        type="delete"
                         onClick={() =>
                           handleDeleteCourse(course.slug)
                         }
-                      >
-                        <IconDelete className="size-5" />
-                      </button>
-                    </div>
+                      />
+                    </TableAction>
                   </TableCell>
                 </TableRow>
               );
