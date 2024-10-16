@@ -38,9 +38,11 @@ import { getAllCourses } from "@/lib/actions/course.actions";
 import { debounce } from "lodash";
 import { IconClose } from "@/components/icons";
 const formSchema = z.object({
-  title: z.string({
-    message: "Tiêu đề không được để trống",
-  }),
+  title: z
+    .string({
+      message: "Tiêu đề không được để trống",
+    })
+    .min(10, "Tiêu đề phải có ít nhất 10 ký tự"),
   code: z
     .string({
       message: "Mã giảm giá không được để trống",
@@ -226,7 +228,7 @@ const NewCouponForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Loại coupon</FormLabel>
-                <FormControl>
+                <FormControl className="h-12">
                   <RadioGroup
                     defaultValue={ECouponType.PERCENT}
                     className="flex gap-5"
@@ -281,8 +283,8 @@ const NewCouponForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Trạng thái</FormLabel>
-                <FormControl>
-                  <div>
+                <FormControl className="h-12">
+                  <div className="flex flex-col justify-center">
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}

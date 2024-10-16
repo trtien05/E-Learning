@@ -56,7 +56,9 @@ const UpdateCouponForm = () => {
   const [endDate, setEndDate] = useState<Date>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      type: ECouponType.PERCENT,
+    },
   });
   const couponTypeWatch = form.watch("type");
 
@@ -177,7 +179,7 @@ const UpdateCouponForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Loại coupon</FormLabel>
-                <FormControl>
+                <FormControl className="h-12">
                   <RadioGroup
                     defaultValue={ECouponType.PERCENT}
                     className="flex gap-5"
@@ -229,8 +231,8 @@ const UpdateCouponForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Trạng thái</FormLabel>
-                <FormControl>
-                  <div>
+                <FormControl className="h-12">
+                  <div className="flex flex-col justify-center">
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
