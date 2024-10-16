@@ -3,11 +3,25 @@
 import Coupon, { ICoupon } from "@/database/coupon.model";
 import { connectToDatabase } from "../mongoose";
 import { revalidatePath } from "next/cache";
-import { TCouponParams } from "@/types";
+import {
+  TCouponParams,
+  TCreateCouponParams,
+  TUpdateCouponParams,
+} from "@/types";
 
-export async function createCoupon(params: any) {
+export async function createCoupon(params: TCreateCouponParams) {
   try {
     connectToDatabase();
+    const existingCoupon = await Coupon.findOne({
+      code: params.code,
+    });
+    if (existingCoupon) {
+      return { error: "Mã giảm giá đã tồn tại" };
+    }
+    const couponRegex = /^[A-Z0-9]{3,10}$/;
+    if (!couponRegex.test(params.code)) {
+      return { error: "Mã giảm giá không hợp lệ" };
+    }
     const newCoupon = await Coupon.create(params);
     return JSON.parse(JSON.stringify(newCoupon));
   } catch (error) {
@@ -51,7 +65,7 @@ export async function getCouponByCode(
     console.log(error);
   }
 }
-export async function updateCoupon(params: any) {
+export async function updateCoupon(params: TUpdateCouponParams) {
   try {
     connectToDatabase();
     const updateCoupon = await Coupon.findByIdAndUpdate(

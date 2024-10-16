@@ -1,6 +1,7 @@
 import { ICourse } from "@/database/course.model";
 import { ILecture } from "@/database/lecture.model";
 import { ILesson } from "@/database/lesson.model";
+import { ECouponType } from "./enum";
 
 export type TMenuItems = {
   url: string;
@@ -122,4 +123,19 @@ export type TCouponParams = Omit<ICoupon, "courses"> & {
     _id: string;
     title: string;
   }[];
+};
+export type TCreateCouponParams = {
+  title: string;
+  code: string;
+  type: ECouponType;
+  value?: number;
+  start_date?: Date;
+  end_date?: Date;
+  active?: boolean;
+  limit?: number;
+  courses?: string[];
+};
+export type TUpdateCouponParams = {
+  _id: string;
+  updateData: Partial<TCreateCouponParams>;
 };

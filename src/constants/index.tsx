@@ -13,6 +13,7 @@ import {
   ECourseStatus,
   EOrderStatus,
 } from "@/types/enum";
+import { z } from "zod";
 
 export const menuItems: {
   url: string;
@@ -179,6 +180,25 @@ export const editorOptions = (field: any, theme: any) => ({
       "link",
     content_style: `@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');body { font-family: Manrope,Helvetica,Arial,sans-serif; font-size:14px; line-height: 2; padding-bottom: 32px; } img { max-width: 100%; height: auto; display: block; margin: 0 auto; };`,
   },
+});
+
+export const couponFormSchema = z.object({
+  title: z.string({
+    message: "Tiêu đề không được để trống",
+  }),
+  code: z
+    .string({
+      message: "Mã giảm giá không được để trống",
+    })
+    .min(3, "Mã giảm giá phải lớn hơn 3 ký tự")
+    .max(10, "Mã giảm giá phải nhỏ hơn 10 ký tự"),
+  start_date: z.string().optional(),
+  end_date: z.string().optional(),
+  active: z.boolean().optional(),
+  value: z.string().optional(),
+  type: z.enum([ECouponType.PERCENT, ECouponType.AMOUNT]),
+  courses: z.array(z.string()).optional(),
+  limit: z.number().optional(),
 });
 
 export const lastLessonKey = "lastLesson";

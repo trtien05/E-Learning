@@ -28,7 +28,7 @@ import { Switch } from "@/components/ui/switch";
 import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ECouponType } from "@/types/enum";
-import { couponTypes } from "@/constants";
+import { couponFormSchema, couponTypes } from "@/constants";
 import { format } from "date-fns";
 import {
   createCoupon,
@@ -42,35 +42,18 @@ import { IconClose } from "@/components/icons";
 import { Checkbox } from "@/components/ui/checkbox";
 import { debounce } from "lodash";
 import { getAllCourses } from "@/lib/actions/course.actions";
-const formSchema = z.object({
-  title: z.string({
-    message: "Tiêu đề không được để trống",
-  }),
-  code: z
-    .string({
-      message: "Mã giảm giá không được để trống",
-    })
-    .min(3, "Mã giảm giá phải lớn hơn 3 ký tự")
-    .max(10, "Mã giảm giá phải nhỏ hơn 10 ký tự"),
-  start_date: z.string().optional(),
-  end_date: z.string().optional(),
-  active: z.boolean().optional(),
-  value: z.string().optional(),
-  type: z.string().optional(),
-  courses: z.array(z.string()).optional(),
-  limit: z.number().optional(),
-});
+
 const UpdateCouponForm = ({ data }: { data: TCouponParams }) => {
   const [findCourse, setFindCourse] = useState<any[] | undefined>([]);
   const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
   const [startDate, setStartDate] = useState<Date>(
-    data.start_date || undefined
+    data.start_date || new Date()
   );
   const [endDate, setEndDate] = useState<Date>(
-    data.end_date || undefined
+    data.end_date || new Date()
   );
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof couponFormSchema>>({
+    resolver: zodResolver(couponFormSchema),
     defaultValues: {
       title: data.title,
       code: data.code,
@@ -82,7 +65,7 @@ const UpdateCouponForm = ({ data }: { data: TCouponParams }) => {
   });
   const couponTypeWatch = form.watch("type");
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof couponFormSchema>) {
     const couponType = values.type;
     const couponValue = Number(values.value?.replace(/,/g, ""));
     if (
@@ -256,7 +239,7 @@ const UpdateCouponForm = ({ data }: { data: TCouponParams }) => {
                 <FormLabel>Loại coupon</FormLabel>
                 <FormControl className="h-12">
                   <RadioGroup
-                    defaultValue={ECouponType.PERCENT}
+                    value={field.value}
                     className="flex gap-5"
                     onValueChange={field.onChange}
                   >
@@ -405,7 +388,11 @@ const UpdateCouponForm = ({ data }: { data: TCouponParams }) => {
             )}
           />
         </div>
-        <Button variant="primary" className="w-[150px] ml-auto flex">
+        <Button
+          variant="primary"
+          type="submit"
+          className="w-[150px] ml-auto flex"
+        >
           Cập nhật
         </Button>
       </form>

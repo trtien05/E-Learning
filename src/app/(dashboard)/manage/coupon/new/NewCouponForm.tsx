@@ -28,43 +28,24 @@ import { Switch } from "@/components/ui/switch";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { ECouponType } from "@/types/enum";
-import { couponTypes } from "@/constants";
+import { couponFormSchema, couponTypes } from "@/constants";
 import { format } from "date-fns";
 import { createCoupon } from "@/lib/actions/coupon.actions";
 import { toast } from "react-toastify";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getAllCourses } from "@/lib/actions/course.actions";
 import { debounce } from "lodash";
 import { IconClose } from "@/components/icons";
 import InputFormatCurrency from "@/components/ui/input-format";
-const formSchema = z.object({
-  title: z
-    .string({
-      message: "Tiêu đề không được để trống",
-    })
-    .min(10, "Tiêu đề phải có ít nhất 10 ký tự"),
-  code: z
-    .string({
-      message: "Mã giảm giá không được để trống",
-    })
-    .min(3, "Mã giảm giá phải lớn hơn 3 ký tự")
-    .max(10, "Mã giảm giá phải nhỏ hơn 10 ký tự"),
-  start_date: z.string().optional(),
-  end_date: z.string().optional(),
-  active: z.boolean().optional(),
-  value: z.string().optional(),
-  type: z.string().optional(),
-  courses: z.array(z.string()).optional(),
-  limit: z.number().optional(),
-});
+
 const NewCouponForm = () => {
   const [findCourse, setFindCourse] = useState<any[] | undefined>([]);
   const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof couponFormSchema>>({
+    resolver: zodResolver(couponFormSchema),
     defaultValues: {
       active: true,
       type: ECouponType.PERCENT,
@@ -78,8 +59,8 @@ const NewCouponForm = () => {
     },
   });
   const couponTypeWatch = form.watch("type");
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const router = useRouter();
+  async function onSubmit(values: z.infer<typeof couponFormSchema>) {
     try {
       const couponType = values.type;
       const couponValue = Number(values.value?.replace(/,/g, ""));
@@ -95,17 +76,18 @@ const NewCouponForm = () => {
       }
       const newCoupon = await createCoupon({
         ...values,
+        value: couponValue,
         start_date: startDate,
         end_date: endDate,
         courses: selectedCourses.map((course) => course._id),
       });
+      if (newCoupon.error) {
+        toast.error(newCoupon.error);
+        return;
+      }
       if (newCoupon.code) {
         toast.success("Tạo mã giảm giá thành công");
-        form.reset();
-        setStartDate(undefined);
-        setEndDate(undefined);
-        setFindCourse([]);
-        setSelectedCourses([]);
+        router.push("/manage/coupon");
       }
     } catch (error) {
       console.log(error);
