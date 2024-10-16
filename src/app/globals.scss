@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-gray-100 dark:bg-grayDarkest dark:text-white;
+    @apply bg-gray-50 dark:bg-grayDarkest dark:text-white;
   }
 
   :root {
@@ -75,14 +75,13 @@
     width: 0;
   }
 
-  .course-slider>* {
+  .course-slider > * {
     scroll-snap-align: start;
   }
 }
 
 .table-responsive {
   @media screen and (max-width: 1023.98px) {
-
     th,
     td {
       &:not(:first-child) {
