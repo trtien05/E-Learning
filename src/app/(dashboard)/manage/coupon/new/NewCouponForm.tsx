@@ -33,6 +33,10 @@ import { format } from "date-fns";
 import { createCoupon } from "@/lib/actions/coupon.actions";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
+import { getAllCourses } from "@/lib/actions/course.actions";
+import { debounce } from "lodash";
+import { IconClose } from "@/components/icons";
 const formSchema = z.object({
   title: z.string({
     message: "Tiêu đề không được để trống",
@@ -52,25 +56,66 @@ const formSchema = z.object({
   limit: z.number().optional(),
 });
 const NewCouponForm = () => {
+  const [findCourse, setFindCourse] = useState<any[] | undefined>([]);
+  const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      active: true,
+      type: ECouponType.PERCENT,
+      value: 0,
+      limit: 0,
+      title: "",
+      code: "",
+      startDate: "",
+      endDate: "",
+      courses: [],
+    },
   });
   const couponTypeWatch = form.watch("type");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const newCoupon = await createCoupon(values);
+      const newCoupon = await createCoupon({
+        ...values,
+        course: selectedCourses.map((course) => course._id),
+      });
       if (newCoupon.code) {
         toast.success("Tạo mã giảm giá thành công");
-        redirect("/manage/coupon");
+        form.reset();
+        setStartDate(undefined);
+        setEndDate(undefined);
+        setFindCourse([]);
+        setSelectedCourses([]);
       }
     } catch (error) {
       console.log(error);
     }
   }
+  const handleSearchCourse = debounce(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      const findCourse = await getAllCourses({ search: value });
+      setFindCourse(findCourse);
+      if (!value) setFindCourse([]);
+    },
+    500
+  );
+  const handleSelectCourse = (
+    checked: boolean | string,
+    course: any
+  ) => {
+    if (checked) {
+      setSelectedCourses([...selectedCourses, course]);
+    } else {
+      setSelectedCourses(
+        selectedCourses.filter((c) => c._id !== course._id)
+      );
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
@@ -95,7 +140,11 @@ const NewCouponForm = () => {
               <FormItem>
                 <FormLabel>Code</FormLabel>
                 <FormControl>
-                  <Input placeholder="Mã giảm giá" {...field} />
+                  <Input
+                    placeholder="Mã giảm giá"
+                    className="font-bold"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -192,7 +241,10 @@ const NewCouponForm = () => {
                           value={type.value}
                           id={type.value}
                         />
-                        <Label htmlFor={type.value}>
+                        <Label
+                          htmlFor={type.value}
+                          className="cursor-pointer"
+                        >
                           {type.title}
                         </Label>
                       </div>
@@ -268,7 +320,55 @@ const NewCouponForm = () => {
               <FormItem>
                 <FormLabel>Khóa học</FormLabel>
                 <FormControl>
-                  <Input placeholder="Tìm kiếm khóa học..." />
+                  <>
+                    <Input
+                      placeholder="Tìm kiếm khóa học..."
+                      onChange={(e) => handleSearchCourse(e)}
+                    />
+                    {findCourse && findCourse.length > 0 && (
+                      <div className="flex flex-cols gap-2 !mt-5">
+                        {findCourse.map((course) => (
+                          <Label
+                            key={course.title}
+                            htmlFor={course.title}
+                            className="flex items-center gap-2 font-medium text-sm cursor-pointer"
+                          >
+                            <Checkbox
+                              id={course.title}
+                              onCheckedChange={(checked) =>
+                                handleSelectCourse(checked, course)
+                              }
+                              checked={selectedCourses.some(
+                                (el) => el._id === course._id
+                              )}
+                            />
+                            <span>{course.title}</span>
+                          </Label>
+                        ))}
+                      </div>
+                    )}
+                    {selectedCourses &&
+                      selectedCourses.length > 0 && (
+                        <div className="flex items-start flex-wrap gap-2 !mt-5">
+                          {selectedCourses.map((course) => (
+                            <div
+                              key={course.title}
+                              className="inline-flex items-center gap-2 font-semibold text-sm px-3 py-1 rounded-lg border borderDarkMode bgDarkMode"
+                            >
+                              <span>{course.title}</span>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleSelectCourse(false, course)
+                                }
+                              >
+                                <IconClose className="size-5 text-gray-400 hover:text-gray-600" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                  </>
                 </FormControl>
                 <FormMessage />
               </FormItem>
