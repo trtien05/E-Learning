@@ -54,13 +54,13 @@ export async function getCouponByCode(
 ): Promise<TCouponParams | undefined> {
   try {
     connectToDatabase();
-    const coupons = await Coupon.findOne({
+    const coupon = await Coupon.findOne({
       code: params.code,
     }).populate({
       path: "courses",
       select: "_id title",
     });
-    return JSON.parse(JSON.stringify(coupons));
+    return JSON.parse(JSON.stringify(coupon));
   } catch (error) {
     console.log(error);
   }
@@ -75,4 +75,38 @@ export async function updateCoupon(params: TUpdateCouponParams) {
     revalidatePath("/manage/coupon");
     return JSON.parse(JSON.stringify(updateCoupon));
   } catch (error) {}
+}
+export async function getValidateCoupon(
+  params: any
+): Promise<TCouponParams | undefined> {
+  try {
+    connectToDatabase();
+    const findCoupon = await Coupon.findOne({
+      code: params.code,
+    }).populate({
+      path: "courses",
+      select: "_id title",
+    });
+    const coupon = JSON.parse(JSON.stringify(findCoupon));
+    let isActive = true;
+    if (coupon.active === false) {
+      isActive = false;
+    }
+    if (coupon?.used > coupon?.limit) {
+      isActive = false;
+    }
+    if (
+      coupon?.start_date &&
+      new Date(coupon?.start_date) > new Date()
+    ) {
+      isActive = false;
+    }
+    if (coupon?.end_date && new Date(coupon?.end_date) < new Date()) {
+      isActive = false;
+    }
+
+    return isActive ? coupon : undefined;
+  } catch (error) {
+    console.log(error);
+  }
 }
