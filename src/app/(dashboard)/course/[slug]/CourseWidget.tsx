@@ -7,9 +7,11 @@ import CouponForm from "./CouponForm";
 const CourseWidget = ({
   data,
   findUser,
+  duration,
 }: {
   data: any;
   findUser: any;
+  duration: string;
 }) => {
   const [price, setPrice] = useState<number>(data.price);
   const [coupon, setCoupon] = useState("");
@@ -31,7 +33,7 @@ const CourseWidget = ({
       <ul className="flex flex-col gap-3 text-sm mb-3 text-slate-500">
         <li className="flex items-center gap-2">
           <IconPlay className="size-4" />
-          <span>30h học</span>
+          <span>{duration} học</span>
         </li>
         <li className="flex items-center gap-2">
           <IconPlay className="size-4" />

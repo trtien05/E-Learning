@@ -1,11 +1,13 @@
 import { IconClock, IconEye, IconStar } from "@/components/icons";
 import { commonClassName } from "@/constants";
+import { getCourseLessonInfo } from "@/lib/actions/course.actions";
 import { StudyCoursesProps } from "@/types";
+import { formatMinutesToHour, formatNumberToK } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const CourseItem = ({
+const CourseItem = async ({
   data,
   cta,
   url,
@@ -14,9 +16,11 @@ const CourseItem = ({
   cta?: string;
   url?: string;
 }) => {
+  const { duration }: any =
+    (await getCourseLessonInfo({ slug: data.slug })) || 0;
   const courseInfo = [
     {
-      title: data.views,
+      title: formatNumberToK(data.views),
       icon: (className: string) => <IconEye className={className} />,
     },
     {
@@ -24,7 +28,7 @@ const CourseItem = ({
       icon: (className: string) => <IconStar className={className} />,
     },
     {
-      title: "3h25m",
+      title: formatMinutesToHour(duration),
       icon: (className: string) => (
         <IconClock className={className} />
       ),

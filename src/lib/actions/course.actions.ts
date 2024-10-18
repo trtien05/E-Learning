@@ -134,3 +134,43 @@ export async function updateCourse(params: TUpdateCoureParams) {
     console.log(error);
   }
 }
+
+export async function updateCourseView({ slug }: { slug: string }) {
+  try {
+    connectToDatabase();
+    await Course.findOneAndUpdate({ slug }, { $inc: { views: 1 } });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCourseLessonInfo({
+  slug,
+}: {
+  slug: string;
+}) {
+  try {
+    connectToDatabase();
+    const course = await Course.findOne({ slug }).populate({
+      path: "lectures",
+      select: "lessons",
+      populate: {
+        path: "lessons",
+        select: "duration",
+      },
+    });
+    const lessons = course?.lectures
+      .map((l: any) => l.lessons)
+      .flat();
+    const duration = lessons.reduce(
+      (acc: number, cur: any) => acc + cur.duration,
+      0
+    );
+    return {
+      duration,
+      lessons: lessons.length,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+}
