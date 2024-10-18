@@ -12,6 +12,8 @@ const CourseWidget = ({
   findUser: any;
 }) => {
   const [price, setPrice] = useState<number>(data.price);
+  const [coupon, setCoupon] = useState("");
+
   return (
     <div className="bgDarkMode border borderDarkMode rounded-lg p-5">
       <div className="flex items-center gap-2 mb-3">
@@ -48,8 +50,14 @@ const CourseWidget = ({
         user={findUser ? JSON.parse(JSON.stringify(findUser)) : null}
         courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
         amount={price}
+        coupon={coupon}
       ></ButtonEnroll>
-      <CouponForm price={price} setPrice={setPrice} />
+      <CouponForm
+        originalPrice={price}
+        setPrice={setPrice}
+        setCouponId={setCoupon}
+        courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
+      />
     </div>
   );
 };

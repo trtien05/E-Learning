@@ -33,7 +33,7 @@ export async function getCoupons(
 ): Promise<ICoupon[] | undefined> {
   try {
     connectToDatabase();
-    const coupons = await Coupon.find(params);
+    const coupons = await Coupon.find(params).sort({ createdAt: -1 });
     revalidatePath("/manage/coupon");
     return JSON.parse(JSON.stringify(coupons));
   } catch (error) {
@@ -88,7 +88,11 @@ export async function getValidateCoupon(
       select: "_id title",
     });
     const coupon = JSON.parse(JSON.stringify(findCoupon));
+    const couponCourses = coupon?.courses.map(
+      (course: any) => course._id
+    );
     let isActive = true;
+    if (!couponCourses.includes(params.courseId)) isActive = false;
     if (coupon.active === false) {
       isActive = false;
     }
