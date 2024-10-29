@@ -7,6 +7,7 @@ import {
   IconComment,
   IconCoupon,
 } from "@/components/icons/index";
+import { TMenuItems, TRatingIcon } from "@/types";
 import {
   ECouponType,
   ECourseLevel,
@@ -15,120 +16,146 @@ import {
 } from "@/types/enum";
 import { z } from "zod";
 
+export const ratingList: {
+  title: TRatingIcon;
+  value: number;
+}[] = [
+    {
+      title: "awesome",
+      value: 5,
+    },
+    {
+      title: "good",
+      value: 4,
+    },
+    {
+      title: "meh",
+      value: 3,
+    },
+    {
+      title: "bad",
+      value: 2,
+    },
+    {
+      title: "terrible",
+      value: 1,
+    },
+  ];
+
 export const menuItems: {
   url: string;
   title: string;
   icon: React.ReactNode;
 }[] = [
-  {
-    url: "/",
-    title: "Khám phá",
-    icon: <IconPlay className="size-5" />,
-  },
-  {
-    url: "/study",
-    title: "Khư vực học tập",
-    icon: <IconStudy className="size-5" />,
-  },
-  {
-    url: "/manage/course",
-    title: "Quản lý khóa học",
-    icon: <IconCourse className="size-5" />,
-  },
-  {
-    url: "/manage/user",
-    title: "Quản lý thành viên",
-    icon: <IconUser className="size-5" />,
-  },
-  {
-    url: "/manage/order",
-    title: "Quản lý đơn hàng",
-    icon: <IconOrder className="size-5" />,
-  },
-  {
-    url: "/manage/coupon",
-    title: "Quản lý coupon",
-    icon: <IconCoupon className="size-5" />,
-  },
-  {
-    url: "/manage/comment",
-    title: "Quản lý bình luận",
-    icon: <IconComment className="size-5" />,
-  },
-];
+    {
+      url: "/",
+      title: "Khám phá",
+      icon: <IconPlay className="size-5" />,
+    },
+    {
+      url: "/study",
+      title: "Khư vực học tập",
+      icon: <IconStudy className="size-5" />,
+    },
+    {
+      url: "/manage/course",
+      title: "Quản lý khóa học",
+      icon: <IconCourse className="size-5" />,
+    },
+    {
+      url: "/manage/user",
+      title: "Quản lý thành viên",
+      icon: <IconUser className="size-5" />,
+    },
+    {
+      url: "/manage/order",
+      title: "Quản lý đơn hàng",
+      icon: <IconOrder className="size-5" />,
+    },
+    {
+      url: "/manage/coupon",
+      title: "Quản lý coupon",
+      icon: <IconCoupon className="size-5" />,
+    },
+    {
+      url: "/manage/comment",
+      title: "Quản lý bình luận",
+      icon: <IconComment className="size-5" />,
+    },
+  ];
 
 export const courseStatus: {
   title: string;
   value: ECourseStatus;
   className?: string;
 }[] = [
-  {
-    title: "Đã duyệt",
-    value: ECourseStatus.APPROVED,
-    className: "text-green-500 bg-green-500",
-  },
-  {
-    title: "Chờ duyệt",
-    value: ECourseStatus.PENDING,
-    className: "text-orange-500 bg-orange-500",
-  },
-  {
-    title: "Từ chối",
-    value: ECourseStatus.REJECTED,
-    className: "text-red-500 bg-red-500",
-  },
-];
+    {
+      title: "Đã duyệt",
+      value: ECourseStatus.APPROVED,
+      className: "text-green-500 bg-green-500",
+    },
+    {
+      title: "Chờ duyệt",
+      value: ECourseStatus.PENDING,
+      className: "text-orange-500 bg-orange-500",
+    },
+    {
+      title: "Từ chối",
+      value: ECourseStatus.REJECTED,
+      className: "text-red-500 bg-red-500",
+    },
+  ];
 export const orderStatus: {
   title: string;
   value: EOrderStatus;
   className?: string;
 }[] = [
-  {
-    title: "Đã duyệt",
-    value: EOrderStatus.COMPLETED,
-    className: "text-green-500 bg-green-500",
-  },
-  {
-    title: "Chờ duyệt",
-    value: EOrderStatus.PENDING,
-    className: "text-orange-500 bg-orange-500",
-  },
-  {
-    title: "Đã hủy",
-    value: EOrderStatus.CANCELED,
-    className: "text-red-500 bg-red-500",
-  },
-];
+    {
+      title: "Đã duyệt",
+      value: EOrderStatus.COMPLETED,
+      className: "text-green-500 bg-green-500",
+    },
+    {
+      title: "Chờ duyệt",
+      value: EOrderStatus.PENDING,
+      className: "text-orange-500 bg-orange-500",
+    },
+    {
+      title: "Đã hủy",
+      value: EOrderStatus.CANCELED,
+      className: "text-red-500 bg-red-500",
+    },
+  ];
 export const courseLevel: {
   title: string;
   value: ECourseLevel;
 }[] = [
-  {
-    title: "Dễ",
-    value: ECourseLevel.BEGINNER,
-  },
-  {
-    title: "Trung bình",
-    value: ECourseLevel.INTERMEDIATE,
-  },
-  {
-    title: "Khó",
-    value: ECourseLevel.ADVANCED,
-  },
-];
+    {
+      title: "Dễ",
+      value: ECourseLevel.BEGINNER,
+    },
+    {
+      title: "Trung bình",
+      value: ECourseLevel.INTERMEDIATE,
+    },
+    {
+      title: "Khó",
+      value: ECourseLevel.ADVANCED,
+    },
+  ];
 export const couponTypes: {
   title: string;
   value: ECouponType;
 }[] = [
-  {
-    title: "Phần trăm",
-    value: ECouponType.PERCENT,
-  },
-  {
-    title: "Giá trị",
-    value: ECouponType.AMOUNT,
-  },
-];
+    {
+      title: "Phần trăm",
+      value: ECouponType.PERCENT,
+    },
+    {
+      title: "Giá trị",
+      value: ECouponType.AMOUNT,
+    },
+  ];
 export const courseLevelTitle: Record<ECourseLevel, string> = {
   [ECourseLevel.BEGINNER]: "Dễ",
   [ECourseLevel.INTERMEDIATE]: "Trung bình",

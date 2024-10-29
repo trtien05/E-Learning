@@ -139,3 +139,10 @@ export type TUpdateCouponParams = {
   _id: string;
   updateData: Partial<TCreateCouponParams>;
 };
+
+export type TRatingIcon =
+  | "awesome"
+  | "good"
+  | "meh"
+  | "bad"
+  | "terrible";

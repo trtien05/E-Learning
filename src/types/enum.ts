@@ -1,13 +1,13 @@
 enum EUserStatus {
   ACTIVE = "ACTIVE",
   UNACTIVE = "UNACTIVE",
-  BANNED = "BANNED"
+  BANNED = "BANNED",
 }
 
 enum EUserRole {
   USER = "USER",
   EXPERT = "EXPERT",
-  ADMIN = "ADMIN"
+  ADMIN = "ADMIN",
 }
 
 enum ECourseStatus {
@@ -37,4 +37,18 @@ enum ECouponType {
   PERCENT = "PERCENT",
   AMOUNT = "AMOUNT",
 }
-export { EUserStatus, EUserRole, ECourseStatus, ECourseLevel, ELessonType, EOrderStatus, ECouponType }
+
+enum ERatingStatus {
+  ACTIVE = "ACTIVE",
+  UNACTIVE = "UNACTIVE",
+}
+export {
+  EUserStatus,
+  EUserRole,
+  ECourseStatus,
+  ECourseLevel,
+  ELessonType,
+  EOrderStatus,
+  ECouponType,
+  ERatingStatus,
+};

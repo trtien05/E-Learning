@@ -1,11 +1,12 @@
 import VideoPlayer from '@/app/(dashboard)/[course]/lesson/@player/VideoPlayer'
-import LessonNavigation from '@/app/(dashboard)/[course]/lesson/LessonNavigation'
 import LessonSaveUrl from '@/app/(dashboard)/[course]/lesson/LessonSaveUrl'
 import PageNotFound from '@/app/not-found'
 import { Heading } from '@/components/common'
 import { getCourseBySlug } from '@/lib/actions/course.actions'
 import { findAllLessons } from '@/lib/actions/lesson.actions'
 import React from 'react'
+import { getUserInfo } from "@/lib/actions/user.actions";
+import { auth } from "@clerk/nextjs/server";
 
 const page = async ({
   searchParams,
@@ -18,6 +19,8 @@ const page = async ({
     slug: string
   }
 }) => {
+  const { userId } = auth();
+  const findUser = await getUserInfo({ userId: userId! });
   const course = params.course;
   const slug = searchParams.slug;
   if (!course || !slug) return <PageNotFound />
@@ -49,6 +52,10 @@ const page = async ({
           prevLesson={
             !prevLesson ? "" : `/${course}/lesson?slug=${prevLesson?.slug}`
           }
+          data={{
+            userId: findUser?._id.toString() || "",
+            courseId,
+          }}
         />
         <Heading className='mb-10'>{lessonDetails.title}</Heading>
         <div className="p-5 rounded-lg bgDarkMode border borderDarkMode entry-content">
